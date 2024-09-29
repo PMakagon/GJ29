@@ -1,0 +1,19 @@
+{
+    "name": "GJ29.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GJ29.Editor"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "QNX"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
