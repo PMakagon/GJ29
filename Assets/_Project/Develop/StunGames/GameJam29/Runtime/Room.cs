@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
@@ -29,23 +30,26 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private ItemType itemType;
         [SerializeField] private RoomConnector connectorPrefab;
         [SerializeField] private List<RoomConnector> roomConnectors = new List<RoomConnector>();
-        [SerializeField] private SpriteRenderer roomViewSpriteRenderer;
+        [SerializeField] private SpriteRenderer roomSpriteRenderer;
+        [SerializeField] private SpriteRenderer roomHiddenSpriteRenderer;
+        [SerializeField] private Player player;
+        
+
         [Header("Room Objects Renderers")] 
         [SerializeField] private SpriteRenderer monsterSpriteRenderer;
-        [SerializeField] private SpriteRenderer playerSpriteRenderer;
+        
         [SerializeField] private SpriteRenderer itemSpriteRenderer;
         [SerializeField] private SpriteRenderer lampSpriteRenderer;
         [SerializeField] private SpriteRenderer alarmSpriteRenderer;
+        [SerializeField] private SpriteRenderer terminalSpriteRenderer;
         [SerializeField] private SpriteRenderer exitSpriteRenderer;
-        [Header("Sprites")]
-        [SerializeField] private Sprite roomHiddenSprite;
-        [SerializeField] private Sprite roomVisibleSprite;
-        
-        [SerializeField] private Sprite mosterSprite;
-        [SerializeField] private Sprite playerSprite;
+        [Header("Sprites")] 
+        [SerializeField] private Sprite roomDefaultSprite;
+        [SerializeField] private Sprite roomSelectedSprite;
+
         [SerializeField] private Sprite healthSprite;
         [SerializeField] private Sprite keySprite;
-        
+
         [SerializeField] private Sprite alarmOnSprite;
         [SerializeField] private Sprite alarmOffSprite;
 
@@ -54,45 +58,66 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         [SerializeField] private Sprite terminalOnSprite;
         [SerializeField] private Sprite terminalOffSprite;
-        
+
         private RoomState _state = RoomState.Hidden;
-        private bool isAlarmable;
-        private bool isAlarmOn;
-        private bool isMonsterInRoom;
-        private bool isPlayerInRoom;
-        private bool hasExit;
-        private bool isReady;
+        
+        private bool _isAlarmable;
+        private bool _isAlarmOn;
+        private bool _isMonsterInRoom;
+        private bool _isPlayerInRoom;
+        private bool _hasExit;
+        private bool _isReady;
+
+        public RoomState State => _state;
 
         public List<Room> ConnectedRooms => connectedRooms;
 
         public ItemType ItemType => itemType;
 
-        public bool IsAlarmable => isAlarmable;
+        public bool IsAlarmable => _isAlarmable;
 
-        public bool IsAlarmOn => isAlarmOn;
+        public bool IsAlarmOn => _isAlarmOn;
 
-        public bool IsMonsterInRoom => isMonsterInRoom;
+        public bool IsMonsterInRoom => _isMonsterInRoom;
 
-        public bool IsPlayerInRoom => isPlayerInRoom;
+        public bool IsPlayerInRoom => _isPlayerInRoom;
 
-        public bool HasExit => hasExit;
+        public bool HasExit => _hasExit;
 
-        public bool IsReady => isReady;
+        public bool IsReady => _isReady;
 
 
-        private void Awake()
-        {
-            Subscribe();
-        }
-
-        public void Configure(List<Room> roomsToConnect,ItemType item, bool isAlarmable, bool hasExit)
+        public void Configure(List<Room> roomsToConnect, ItemType item, bool isAlarmable, bool hasExit)
         {
             connectedRooms = roomsToConnect;
             SetItem(item);
-            this.isAlarmable = isAlarmable;
-            this.hasExit = hasExit;
+            this._isAlarmable = isAlarmable;
+            this._hasExit = hasExit;
             ConnectTo(roomsToConnect);
-            isReady = true;
+            _isReady = true;
+        }
+
+        public void Interact()
+        {
+            Debug.Log("INTERACT");
+            if (_state == RoomState.Hidden)
+            {
+                SetRoomVisible();
+                return;
+            }
+            
+            if (_state == RoomState.Visible && itemType != ItemType.None)
+            {
+                ActivateItem();
+            }
+        }
+
+        public void MoveIn()
+        {
+            if (!_isPlayerInRoom)
+            {
+                SetPlayerInRoom();
+            }
         }
 
         private void SetItem(ItemType item)
@@ -127,95 +152,103 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 roomConnectors.Add(newConnector);
                 newConnector.Connect(this, connectedRoom);
             }
-            
         }
 
-        private void Subscribe()
-        {
-            EventHolder.OnPlayerEnterRoom += OnPlayerEnterRoom;
-            EventHolder.onPlayerExitRoom += OnPlayerExitRoom;
-            EventHolder.OnPlayerUseItem += OnPlayerUseItem;
-        }
-
-        private void Unsubscribe()
-        {
-            EventHolder.OnPlayerEnterRoom -= OnPlayerEnterRoom;
-            EventHolder.onPlayerExitRoom -= OnPlayerExitRoom;
-            EventHolder.OnPlayerUseItem -= OnPlayerUseItem;
-        }
-
-        #region Events
-
-        private void OnPlayerEnterRoom(Room room)
-        {
-            isPlayerInRoom = true;
-        }
-
-        private void OnPlayerExitRoom(Room room)
-        {
-            isPlayerInRoom = false;
-        }
-
-        private void OnPlayerUseItem(ItemType itemType)
-        {
-            
-        }
-
-        #endregion
-        
 
         #region Input
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (!isPlayerInRoom)
-            {
-                TryMovePlayerToRoom();
-            }
-            else
-            {
-                SetRoomVisible();
-                if (_state== RoomState.Visible && itemType != ItemType.None)
-                {
-                    ActivateItem();
-                }
-            }
-           
+            EventHolder.RaisePlayerRoomClick(this);
+            // Debug.Log("ROOM CLICK");
         }
-        
+
         public void OnPointerEnter(PointerEventData eventData)
         {
+            // Debug.Log("POINTER ENTER"); 
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            // Debug.Log("POINTER EXIT");
         }
 
         #endregion
 
-        
-
-        private void TryMovePlayerToRoom()
+        public void SetMonster()
         {
-            if (isPlayerInRoom) return;
-            isPlayerInRoom = true;
-            EventHolder.RaisePlayerEnterRoom(this);
-            playerSpriteRenderer.enabled = true;
+            if (_isMonsterInRoom) return;
+            _isMonsterInRoom = true;
+            if (_isPlayerInRoom || _state == RoomState.Lighted)
+            {
+                monsterSpriteRenderer.enabled = true;
+            }
+        }
+
+        public void RemoveMonster()
+        {
+            if (!_isMonsterInRoom) return;
+            _isMonsterInRoom = false;
+            monsterSpriteRenderer.enabled = false;
+        }
+
+        private void SetPlayerInRoom()
+        {
+            if (_isPlayerInRoom) return;
+            Debug.Log("PLAYER INSIDE ROOM");
+            _isPlayerInRoom = true;
+            EventHolder.RaisePlayerEnterRoom(this); 
+            player.Show();
+            roomHiddenSpriteRenderer.enabled = false;
+        }
+
+        public void RemovePlayer()
+        {
+            Debug.Log("PLAYER REMOVED");
+            if (!_isPlayerInRoom) return;
+            _isPlayerInRoom = false;
+            EventHolder.RaisePlayerExitRoom(this);
+            player.Hide();
         }
 
         private void SetRoomVisible()
         {
+            Debug.Log("SET VISIBLE");
             if (_state == RoomState.Hidden)
             {
                 _state = RoomState.Visible;
-                if (isAlarmable) SetAlarmOn();
-                roomViewSpriteRenderer.sprite = roomVisibleSprite;
+                if (_isAlarmable) SetAlarmOn();
+                roomSpriteRenderer.sprite = roomDefaultSprite;
+                exitSpriteRenderer.enabled = _hasExit;
+                switch (itemType)
+                {
+                    case ItemType.None:
+                        break;
+                    case ItemType.Health:
+                        itemSpriteRenderer.sprite = healthSprite;
+                        itemSpriteRenderer.enabled = true;
+                        break;
+                    case ItemType.Key:
+                        itemSpriteRenderer.sprite = keySprite;
+                        itemSpriteRenderer.enabled = true;
+                        break;
+                    case ItemType.Lamp:
+                        lampSpriteRenderer.sprite = lightOffSprite;
+                        lampSpriteRenderer.enabled = true;
+                        break;
+                    case ItemType.Terminal:
+                        terminalSpriteRenderer.sprite = terminalOffSprite;
+                        terminalSpriteRenderer.enabled = true;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
-           
         }
 
         private void ActivateItem()
         {
+            Debug.Log("ACTIVATE ITEM " + itemType);
             switch (itemType)
             {
                 case ItemType.None:
@@ -228,6 +261,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                     break;
                 case ItemType.Lamp:
                     _state = RoomState.Lighted;
+                    lampSpriteRenderer.sprite = lightOnSprite;
                     break;
                 case ItemType.Terminal:
                     UseTerminal();
@@ -235,29 +269,36 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 default:
                     break;
             }
-            EventHolder.RaisePlayerUseItem(itemType);
+
+            EventHolder.RaisePlayerInteract(itemType);
         }
 
         private void UseTerminal()
         {
+            EventHolder.RaisePlayerInteract(ItemType.Terminal);
+            terminalSpriteRenderer.sprite = terminalOnSprite;
         }
 
         private void SetAlarmOn()
         {
-            isAlarmOn = true;
+            alarmSpriteRenderer.enabled = true;
+            alarmSpriteRenderer.sprite = alarmOnSprite;
+            _isAlarmOn = true;
+            EventHolder.RaiseAlarmSetOn(this);
         }
 
         private void AddKey()
         {
+            itemSpriteRenderer.enabled = false;
         }
 
         private void AddHealth()
         {
+            itemSpriteRenderer.enabled = false;
         }
 
         private void OnDestroy()
         {
-            Unsubscribe();
         }
     }
 }
