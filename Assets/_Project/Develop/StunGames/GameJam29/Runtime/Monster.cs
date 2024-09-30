@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using Random = System.Random;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
@@ -23,19 +23,27 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             _isCooldown = false;
             _isAlarmModeOn = false;
             _map = map;
+            SubscribeEvents();
         }
         
         private void SubscribeEvents()
         {
-            //subscribe to alarm
+            EventHolder.OnAlarmSetOn += OnAlarmTrigger;
+            EventHolder.OnPlayerRoomClick += NextStep;
         }
         
         private void UnSubscribeEvents()
         {
-            //subscribe to alarm
+            EventHolder.OnAlarmSetOn -= OnAlarmTrigger;
+            EventHolder.OnPlayerRoomClick -= NextStep;
         }
 
-        private void NextStep()
+        public void SetStartRoom(Room room)
+        {
+            _currentRoom = room;
+        }
+
+        private void NextStep(Room itemType)
         {
             if (_isCooldown)
             {
@@ -53,7 +61,9 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void MoveToRoom()
         {
+            _currentRoom.RemoveMonster();
             _currentRoom = _nextRoom;
+            _currentRoom.SetMonster();
         }
         
         private void ScanRoom()
@@ -74,43 +84,43 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private void ChooseWay()
         {
-            var nextIndex = _random.Next(0, _currentRoom.ConnectedRooms.Count);
-            _nextRoom = _currentRoom.ConnectedRooms[nextIndex];
+            var nextRoomIndex = _random.Next(0, _currentRoom.ConnectedRooms.Count);
+            _nextRoom = _currentRoom.ConnectedRooms[nextRoomIndex];
         }
 
         private void FindShortestWay(Room targetRoom)
         {
-            int roomCount = _map.Count;
-            var dist = new Dictionary<Room, int>(roomCount); // Массив расстояний
-            var parent = new List<Room>(roomCount); // Массив для восстановления пути
-            
-            for (int i = 0; i < roomCount; i++)
-            {
-                dist[_map[i]] = int.MaxValue; // Инициализация всех расстояний как бесконечность
-                parent[i] = null;         // Инициализация всех родителей как -1
-            }
-            
-            dist[_currentRoom] = 0; // Расстояние до стартовой вершины = 0
-            Queue<Room> queue = new Queue<Room>();
-            queue.Enqueue(_currentRoom);
-
-            while (queue.Count > 0)
-            {
-                Room curr = queue.Dequeue();
-
-                foreach (var connectedRoom in curr.ConnectedRooms)
-                {
-                    if (dist[connectedRoom] == int.MaxValue)
-                    {
-                        dist[connectedRoom] = dist[curr] + 1;
-                    }
-                }
-            }
+            // int roomCount = _map.Count;
+            // var dist = new Dictionary<Room, int>(roomCount); // Массив расстояний
+            // var parent = new List<Room>(roomCount); // Массив для восстановления пути
+            //
+            // for (int i = 0; i < roomCount; i++)
+            // {
+            //     dist[_map[i]] = int.MaxValue; // Инициализация всех расстояний как бесконечность
+            //     parent[i] = null;         // Инициализация всех родителей как -1
+            // }
+            //
+            // dist[_currentRoom] = 0; // Расстояние до стартовой вершины = 0
+            // Queue<Room> queue = new Queue<Room>();
+            // queue.Enqueue(_currentRoom);
+            //
+            // while (queue.Count > 0)
+            // {
+            //     Room curr = queue.Dequeue();
+            //
+            //     foreach (var connectedRoom in curr.ConnectedRooms)
+            //     {
+            //         if (dist[connectedRoom] == int.MaxValue)
+            //         {
+            //             dist[connectedRoom] = dist[curr] + 1;
+            //         }
+            //     }
+            // }
         }
         
         public void HurtPlayer()
         {
-            
+            MatchController.Instance.TakeDamage();
         }
 
         public void Dispose()

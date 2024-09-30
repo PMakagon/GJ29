@@ -8,11 +8,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
     {
         [SerializeField] private int startHealth = 17;
         [SerializeField] private List<Room> rooms;
+        [SerializeField] private Room[,] rooms2;
         private int currentHealth;
         private bool _isCard;
         private bool _isInputActive;
         private Room previousRoom;
         private Room currentRoom;
+        private Monster _monster;
 
         public int CurrentHealth => currentHealth;
 
@@ -38,6 +40,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             Subscribe();
             ConfigureRooms();
+            _monster = new Monster();
+            _monster.Configure(rooms);
             StartMatch();
         }
 
@@ -46,13 +50,19 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             for (int i = 0; i < rooms.Count-1; i++)
             {
-                if (i==rooms.Count-1)
+                if (i == 0)
                 {
-                    rooms[i].Configure(new List<Room>(){rooms[0]}, GetRandomItem(), false, true);
+                    rooms[i].Configure(new List<Room>(){rooms[i+1]}, GetRandomItem(), false, false);
+                    continue;
+                }
+                
+                if (i == rooms.Count-1)
+                {
+                    rooms[i].Configure(new List<Room>(){rooms[i-1]}, GetRandomItem(), false, true);
                     return;
                 }
 
-                rooms[i].Configure(new List<Room>(){rooms[i+1]}, GetRandomItem(), false, false);
+                rooms[i].Configure(new List<Room>(){rooms[i+1], rooms[i-1]}, GetRandomItem(), false, false);
             }
         }
         
@@ -63,6 +73,18 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             var color = random.Next(values.Length);
             return (ItemType)values.GetValue(color);
         }
+        
+        private void PlaceMonster()
+        {
+            var random = new System.Random();
+            Room startRoom = rooms[random.Next(rooms.Count)];
+            while (startRoom == currentRoom)
+            {
+                startRoom = rooms[random.Next(rooms.Count)];
+            }
+            _monster.SetStartRoom(startRoom);
+            startRoom.SetMonster();
+        }
 
         public void StartMatch()
         {
@@ -71,6 +93,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             currentHealth = startHealth;
             currentRoom = rooms[0];
             currentRoom.MoveIn();
+            PlaceMonster();
             EventHolder.RaiseMatchStarted();
             _isInputActive = true;
         }
@@ -95,7 +118,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             }
         }
         
-        private void TakeDamage()
+        public void TakeDamage()
         {
             currentHealth--;
             EventHolder.RaiseHealthChanged(currentHealth);
