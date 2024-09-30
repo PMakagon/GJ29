@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
@@ -7,6 +8,10 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
     {
         [SerializeField] private int gridWidth = 3; // ширина сетки уровня
         [SerializeField] private int gridHeight = 3; // высота сетки уровня
+        [SerializeField] private float xMultiplier = 1.0f; // множитель сдвига координат по оси X
+        [SerializeField] private float yMultiplier = 1.0f; // множитель сдвига координат по оси Y
+        [SerializeField] private float xOffset = 0.0f; // Величина сдвига всей сетки по оси X
+        [SerializeField] private float yOffset = 0.0f; // Величина сдвига всей сетки по оси Y
         [SerializeField] private int numberOfRooms = 7; // количество комнат на уровень
         [SerializeField] private int numberOfAlarms = 1; // количество сигнализаций на уровень
         [SerializeField] private int numberOfLamps = 1; // количество ламп на уровень
@@ -16,7 +21,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private RoomConnector connectorPrefab; // Префаб коридора
 
         private List<Room> _allRooms;
-        private HashSet<Vector3> _occupiedPositions;
+        private HashSet<Vector3> _occupiedPositions; // Набор занятых позиций сетки
 
         private void Start()
         {
@@ -33,7 +38,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             Queue<Room> freeRoomQueue = new Queue<Room>();
 
             // Создаем первую комнату
-            Vector3 startPosition = new Vector3(Random.Range(0, gridWidth), 0, Random.Range(0, gridHeight));
+            Vector3 startPosition = new Vector3(Random.Range(0, gridWidth), Random.Range(0, gridHeight), 0);
             Room startRoom = CreateRoom(startPosition);
             _allRooms.Add(startRoom);
             roomQueue.Enqueue(startRoom);
@@ -67,7 +72,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private Room CreateRoom(Vector3 position)
         {
-            var newRoom = Instantiate(roomPrefab, position, Quaternion.identity);
+            var newRoom = Instantiate(roomPrefab, new Vector3(position.x * xMultiplier + xOffset, position.y * yMultiplier + yOffset, position.z), Quaternion.identity);
             Room room = newRoom.GetComponent<Room>(); // Заменить сразу на Room
             return room;
         }
@@ -85,7 +90,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private bool IsValidPosition(Vector3 position)
         {
             return position.x >= 0 && position.x < gridWidth &&
-                   position.z >= 0 && position.z < gridHeight &&
+                   position.y >= 0 && position.y < gridHeight &&
                    !_occupiedPositions.Contains(position);
         }
         
@@ -101,8 +106,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             List<Vector3> availablePositions = new List<Vector3>();
             if (IsValidPosition(currentPosition + Vector3.right)) availablePositions.Add(currentPosition + Vector3.right); // вправо
             if (IsValidPosition(currentPosition + Vector3.left)) availablePositions.Add(currentPosition + Vector3.left); // влево
-            if (IsValidPosition(currentPosition + Vector3.forward)) availablePositions.Add(currentPosition + Vector3.forward); // вверх
-            if (IsValidPosition(currentPosition + Vector3.back)) availablePositions.Add(currentPosition + Vector3.back); // вниз
+            if (IsValidPosition(currentPosition + Vector3.up)) availablePositions.Add(currentPosition + Vector3.up); // вверх
+            if (IsValidPosition(currentPosition + Vector3.down)) availablePositions.Add(currentPosition + Vector3.down); // вниз
             return availablePositions;
         }
 
@@ -127,6 +132,14 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             int randomRoomIndex = Random.Range(0, emptyRooms.Count);
             emptyRooms[randomRoomIndex].Configure(item, isAlarmable, hasExit);
             emptyRooms.RemoveAt(randomRoomIndex);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            for (int i = 0; i < gridWidth; i++)
+                for (int j = 0; j < gridHeight; j++)
+                    Gizmos.DrawCube(new Vector3(i * xMultiplier + xOffset, j * yMultiplier + yOffset, 0), new Vector3(0.8f, 0.5f, 0.5f));
         }
     }
 }
