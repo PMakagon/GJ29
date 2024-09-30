@@ -65,6 +65,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public List<Room> ConnectedRooms => connectedRooms;
 
+        public List<RoomConnector> RoomConnectors => roomConnectors;
+
         public ItemType ItemType => itemType;
 
         public bool IsAlarmable => isAlarmable;
@@ -85,13 +87,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             Subscribe();
         }
 
-        public void Configure(List<Room> roomsToConnect,ItemType item, bool isAlarmable, bool hasExit)
+        public void Configure(ItemType item, bool isAlarmable, bool hasExit)
         {
-            connectedRooms = roomsToConnect;
             SetItem(item);
             this.isAlarmable = isAlarmable;
             this.hasExit = hasExit;
-            ConnectTo(roomsToConnect);
             isReady = true;
         }
 
