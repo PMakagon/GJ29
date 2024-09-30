@@ -1,29 +1,50 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
     public class Monster
     {
-        private List<int> _map;
-        private List<int> _shortestWay;
+        private List<Room> _map;
+        private Queue<Room> _shortestWay;
         private int _damage;
-        private int _nextRoom;
-        private int _currentRoom;
+        private Room _nextRoom;
+        private Room _currentRoom;
         private bool _isPlayerInRoom;
-        private bool _isAlarmOn;
-
-        public int CurrentRoom => _currentRoom;
-
+        private bool _isAlarmModeOn;
+        private bool _isCooldown;
+        
+        private Random _random = new Random();
+        public Room CurrentRoom => _currentRoom;
+        
+        public void Configure(List<Room> map)
+        {
+            _isCooldown = false;
+            _isAlarmModeOn = false;
+            _map = map;
+        }
+        
         private void SubscribeEvents()
         {
-            
+            //subscribe to alarm
+        }
+        
+        private void UnSubscribeEvents()
+        {
+            //subscribe to alarm
         }
 
         private void NextStep()
         {
-            if (_isAlarmOn)
+            if (_isCooldown)
             {
-                _nextRoom = _shortestWay[0];
+                _isCooldown = false;
+                return;
+            }
+            if (_isAlarmModeOn)
+            {
+                _nextRoom = _shortestWay.Peek();
             }
             else ChooseWay();
             MoveToRoom();
@@ -37,33 +58,64 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private void ScanRoom()
         {
-            if (_isPlayerInRoom)
+            if (_currentRoom.IsPlayerInRoom)
             {
                 HurtPlayer();
-                if (_isAlarmOn) _isAlarmOn = false;
+                _isCooldown = true;
+                if (_isAlarmModeOn) _isAlarmModeOn = false;
             }
-            
         }
         
-        private void OnAlarmTrigger()
+        private void OnAlarmTrigger(Room targetRoom)
         {
-            _isAlarmOn = true;
-            FindShortestWay();
+            _isAlarmModeOn = true;
+            FindShortestWay(targetRoom);
         }
         
         private void ChooseWay()
         {
-            //_nextRoom = _currentRoom.ConnectedRooms;
+            var nextIndex = _random.Next(0, _currentRoom.ConnectedRooms.Count);
+            _nextRoom = _currentRoom.ConnectedRooms[nextIndex];
         }
 
-        private void FindShortestWay()
+        private void FindShortestWay(Room targetRoom)
         {
-            //_shortestWay = map.FindShortest(targetRoom);
+            int roomCount = _map.Count;
+            var dist = new Dictionary<Room, int>(roomCount); // Массив расстояний
+            var parent = new List<Room>(roomCount); // Массив для восстановления пути
+            
+            for (int i = 0; i < roomCount; i++)
+            {
+                dist[_map[i]] = int.MaxValue; // Инициализация всех расстояний как бесконечность
+                parent[i] = null;         // Инициализация всех родителей как -1
+            }
+            
+            dist[_currentRoom] = 0; // Расстояние до стартовой вершины = 0
+            Queue<Room> queue = new Queue<Room>();
+            queue.Enqueue(_currentRoom);
+
+            while (queue.Count > 0)
+            {
+                Room curr = queue.Dequeue();
+
+                foreach (var connectedRoom in curr.ConnectedRooms)
+                {
+                    if (dist[connectedRoom] == int.MaxValue)
+                    {
+                        dist[connectedRoom] = dist[curr] + 1;
+                    }
+                }
+            }
         }
         
-        private void HurtPlayer()
+        public void HurtPlayer()
         {
             
+        }
+
+        public void Dispose()
+        {
+            UnSubscribeEvents();
         }
     }
 }
