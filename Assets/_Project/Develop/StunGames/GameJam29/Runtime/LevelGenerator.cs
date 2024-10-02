@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,6 +11,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private int gridHeight = 4; // высота сетки уровня
         [SerializeField] private float xMultiplier = 28.0f; // разница координат по оси X
         [SerializeField] private float yMultiplier = 18.0f; // разница координат по оси Y
+        [SerializeField] private float roomConnectChance = 15.0f; // Вероятность соединения с уже существующей комнатой, от 0 до 100%
         [SerializeField] private Transform startGridPoint; // Стартовая точка таблицы
         [SerializeField] private int numberOfRooms = 9; // количество комнат на уровень
         [SerializeField] private int numberOfAlarms = 1; // количество сигнализаций на уровень
@@ -42,6 +44,17 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 
                 // Проверяем её стороны
                 List<Vector2Int> availableGridPositions = GetAvailableGridPositions(currentGridPosition);
+                
+                // Если сторона уже занята другой комнатой, то с заданной вероятностью строим к ней проход
+                foreach (var gridPosition in availableGridPositions.ToList().Where(gridPosition => _roomsByGridPosition.ContainsKey(gridPosition)))
+                {
+                    availableGridPositions.Remove(gridPosition);
+                    if (Random.Range(1, 100) < roomConnectChance)
+                    {
+                        ConnectRooms(_roomsByGridPosition[currentGridPosition], _roomsByGridPosition[gridPosition]); 
+                    }
+                }
+                
                 if (availableGridPositions.Count <= 0)
                 {
                     // Если все стороны заняты то удаляем позицию комнаты из списка 
@@ -81,11 +94,10 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             gridPosition.x * xMultiplier + startGridPoint.position.x, 
             gridPosition.y * yMultiplier + startGridPoint.position.y, 
             0);
-        
-        private bool IsValidPosition(Vector2Int position) => 
-            position.x >= 0 && position.x < gridWidth && 
-            position.y >= 0 && position.y < gridHeight &&
-            !_roomsByGridPosition.ContainsKey(position);
+
+        private bool IsValidPosition(Vector2Int position) =>
+            position.x >= 0 && position.x < gridWidth &&
+            position.y >= 0 && position.y < gridHeight;
         
         private List<Vector2Int> GetAvailableGridPositions(Vector2Int currentPosition)
         {
