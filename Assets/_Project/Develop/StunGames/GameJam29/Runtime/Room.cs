@@ -71,8 +71,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public List<Room> ConnectedRooms => connectedRooms;
 
-        public List<RoomConnector> RoomConnectors => roomConnectors;
-
         public ItemType ItemType => itemType;
 
         public bool IsAlarmable => _isAlarmable;
@@ -93,6 +91,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             SetItem(item);
             this._isAlarmable = isAlarmable;
             this._hasExit = hasExit;
+            //ConnectTo(connectedRooms);
             _isReady = true;
         }
 
@@ -178,6 +177,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             if (_isMonsterInRoom) return;
             _isMonsterInRoom = true;
+            monsterSpriteRenderer.enabled = true;
             if (_isPlayerInRoom || _state == RoomState.Lighted)
             {
                 monsterSpriteRenderer.enabled = true;

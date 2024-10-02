@@ -9,11 +9,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private int startHealth = 17;
         [SerializeField] private LevelGenerator levelGenerator;
         [SerializeField] private List<Room> rooms;
+        [SerializeField] private Room[,] rooms2;
         private int currentHealth;
         private bool _isCard;
         private bool _isInputActive;
         private Room previousRoom;
         private Room currentRoom;
+        private Monster _monster;
 
         public int CurrentHealth => currentHealth;
 
@@ -39,6 +41,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             Subscribe();
             ConfigureRooms();
+            _monster = new Monster();
+            _monster.Configure(rooms);
             StartMatch();
         }
 
@@ -47,7 +51,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             levelGenerator.GenerateLevel();
             rooms = levelGenerator.AllRooms;
-            Debug.Log("rooms.Count = " + rooms.Count);
         }
         
         private ItemType GetRandomItem()
@@ -57,6 +60,18 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             var color = random.Next(values.Length);
             return (ItemType)values.GetValue(color);
         }
+        
+        private void PlaceMonster()
+        {
+            var random = new System.Random();
+            Room startRoom = rooms[random.Next(rooms.Count)];
+            while (startRoom == currentRoom)
+            {
+                startRoom = rooms[random.Next(rooms.Count)];
+            }
+            _monster.SetStartRoom(startRoom);
+            startRoom.SetMonster();
+        }
 
         public void StartMatch()
         {
@@ -65,6 +80,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             currentHealth = startHealth;
             currentRoom = rooms[0];
             currentRoom.MoveIn();
+            PlaceMonster();
             EventHolder.RaiseMatchStarted();
             _isInputActive = true;
         }
@@ -89,7 +105,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             }
         }
         
-        private void TakeDamage()
+        public void TakeDamage()
         {
             currentHealth--;
             EventHolder.RaiseHealthChanged(currentHealth);
