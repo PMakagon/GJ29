@@ -6,121 +6,120 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
     public class LevelGenerator : MonoBehaviour
     {
-        [SerializeField] private int gridWidth = 3; // ширина сетки уровня
-        [SerializeField] private int gridHeight = 3; // высота сетки уровня
-        [SerializeField] private float xMultiplier = 1.0f; // множитель сдвига координат по оси X
-        [SerializeField] private float yMultiplier = 1.0f; // множитель сдвига координат по оси Y
-        [SerializeField] private float xOffset = 0.0f; // Величина сдвига всей сетки по оси X
-        [SerializeField] private float yOffset = 0.0f; // Величина сдвига всей сетки по оси Y
-        [SerializeField] private int numberOfRooms = 7; // количество комнат на уровень
+        [SerializeField] private int gridWidth = 4; // ширина сетки уровня
+        [SerializeField] private int gridHeight = 4; // высота сетки уровня
+        [SerializeField] private float xMultiplier = 28.0f; // разница координат по оси X
+        [SerializeField] private float yMultiplier = 18.0f; // разница координат по оси Y
+        [SerializeField] private Transform startGridPoint; // Стартовая точка таблицы
+        [SerializeField] private int numberOfRooms = 9; // количество комнат на уровень
         [SerializeField] private int numberOfAlarms = 1; // количество сигнализаций на уровень
         [SerializeField] private int numberOfLamps = 1; // количество ламп на уровень
         [SerializeField] private int numberOfTerminals = 1; // количество терминалов на уровень
         [SerializeField] private int numberOfHealth = 2; // количество здоровья (дополнительных кликов) на уровень
-        [SerializeField] private GameObject roomPrefab; // Префаб комнаты
-        [SerializeField] private RoomConnector connectorPrefab; // Префаб коридора
-
-        private List<Room> _allRooms;
-        private HashSet<Vector3> _occupiedPositions; // Набор занятых позиций сетки
-
-        private void Start()
+        [SerializeField] private Room roomPrefab; // Префаб комнаты
+        
+        private List<Room> _allRooms = new List<Room>(); // Список всех созданных комнат
+        private Dictionary<Vector2Int, Room> _roomsByGridPosition = new Dictionary<Vector2Int, Room>(); // Словарь для хранения комнат по их позициям в сетке
+        
+        public List<Room> AllRooms => _allRooms;
+        
+        public void GenerateLevel()
         {
-            _allRooms = new List<Room>();
-            _occupiedPositions = new HashSet<Vector3>();
-            GenerateLevel();
-        }
-
-        private void GenerateLevel()
-        {
-            // Очередь из комнат которым необходимо создать коннекторы
-            Queue<Room> roomQueue = new Queue<Room>();
-            // Очередь из комнат оставшихся со свободными коннекторами (нужна для тупиковых случаев)
-            Queue<Room> freeRoomQueue = new Queue<Room>();
-
-            // Создаем первую комнату
-            Vector3 startPosition = new Vector3(Random.Range(0, gridWidth), Random.Range(0, gridHeight), 0);
-            Room startRoom = CreateRoom(startPosition);
-            _allRooms.Add(startRoom);
-            roomQueue.Enqueue(startRoom);
-            _occupiedPositions.Add(startPosition);
+            // Создаем список обрабатываемых комнат (доступных для ответвлений) 
+            List<Vector2Int> roomGridPositionsList = new List<Vector2Int>();
             
-            // Генерация остальных комнат
-            while (roomQueue.Count > 0 && _allRooms.Count < numberOfRooms)
+            // Создаем стартовую коанмту
+            Vector2Int startGridPosition = GetRandomGridPosition();
+            CreateRoom(startGridPosition);
+            roomGridPositionsList.Add(startGridPosition);
+            
+            // Создаем остальные комнаты, ответвления 
+            while (_allRooms.Count < numberOfRooms && roomGridPositionsList.Count > 0)
             {
-                Room currentRoom = GetNextRoom(roomQueue, freeRoomQueue);
-                if (currentRoom == null) break; // Если комнаты закончились - выходим
+                // Берем случайную комнату из доступных
+                int currentGridPositionIndex = Random.Range(0, roomGridPositionsList.Count);
+                Vector2Int currentGridPosition = roomGridPositionsList[currentGridPositionIndex];
                 
-                List<Vector3> availablePositions = GetAvailablePositions(currentRoom.transform.position);
-                if (availablePositions.Count == 0) continue; // Если некуда пристроить коннектор то скипаем 
-                int numberOfConnectors = Random.Range(1, availablePositions.Count); // Иначе создаем от 1 до 4 новых коннекторов
-                if (numberOfConnectors < availablePositions.Count) freeRoomQueue.Enqueue(startRoom); // Если остались слоты - сохраняем
-
-                for (int i = 0; i < numberOfConnectors; i++)
+                // Проверяем её стороны
+                List<Vector2Int> availableGridPositions = GetAvailableGridPositions(currentGridPosition);
+                if (availableGridPositions.Count <= 0)
                 {
-                    int positionIndex = Random.Range(0, availablePositions.Count - 1); // Выбор случайного коннектора
-                    Room newRoom = CreateRoom(availablePositions[positionIndex]);
-                    ConnectRooms(currentRoom, newRoom);
-                    roomQueue.Enqueue(newRoom);
-                    _occupiedPositions.Add(availablePositions[positionIndex]);
-                    availablePositions.RemoveAt(positionIndex);
+                    // Если все стороны заняты то удаляем позицию комнаты из списка 
+                    roomGridPositionsList.RemoveAt(currentGridPositionIndex);
+                }
+                else
+                {
+                    // Иначе выбираем случайное количество (от 1 до 4) доступных новых сторон и создаём от них новые комнаты
+                    int numberOfConnectors = Random.Range(1, Random.Range(1, availableGridPositions.Count));
+                    for (int i = 0; i < numberOfConnectors; i++)
+                    {
+                        // Выбор случайной стороны для создания комнаты
+                        int positionIndex = Random.Range(0, availableGridPositions.Count);
+                        Vector2Int newGridPosition = availableGridPositions[positionIndex];
+
+                        // Создание комнаты
+                        CreateRoom(newGridPosition);
+                        ConnectRooms(_roomsByGridPosition[currentGridPosition], _roomsByGridPosition[newGridPosition]); 
+                        roomGridPositionsList.Add(newGridPosition);
+
+                        // Удаление стороны из списка доступных
+                        availableGridPositions.RemoveAt(positionIndex);
+                    }
                 }
             }
 
             // Наполняем комнаты предметами
             FillRooms();
+            Debug.Log("AllRooms.Count = " + AllRooms.Count);
         }
         
-        private Room CreateRoom(Vector3 position)
-        {
-            var newRoom = Instantiate(roomPrefab, new Vector3(position.x * xMultiplier + xOffset, position.y * yMultiplier + yOffset, position.z), Quaternion.identity);
-            Room room = newRoom.GetComponent<Room>(); // Заменить сразу на Room
-            return room;
-        }
+        private Vector2Int GetRandomGridPosition() => new Vector2Int(
+            Random.Range(0, gridWidth), 
+            Random.Range(0, gridHeight));
 
+        private Vector3 GetWorldPosition(Vector2Int gridPosition) => new Vector3(
+            gridPosition.x * xMultiplier + startGridPoint.position.x, 
+            gridPosition.y * yMultiplier + startGridPoint.position.y, 
+            0);
+        
+        private bool IsValidPosition(Vector2Int position) => 
+            position.x >= 0 && position.x < gridWidth && 
+            position.y >= 0 && position.y < gridHeight &&
+            !_roomsByGridPosition.ContainsKey(position);
+        
+        private List<Vector2Int> GetAvailableGridPositions(Vector2Int currentPosition)
+        {
+            List<Vector2Int> availablePositions = new List<Vector2Int>();
+            if (IsValidPosition(currentPosition + Vector2Int.right)) availablePositions.Add(currentPosition + Vector2Int.right); // вправо
+            if (IsValidPosition(currentPosition + Vector2Int.left)) availablePositions.Add(currentPosition + Vector2Int.left); // влево
+            if (IsValidPosition(currentPosition + Vector2Int.up)) availablePositions.Add(currentPosition + Vector2Int.up); // вверх
+            if (IsValidPosition(currentPosition + Vector2Int.down)) availablePositions.Add(currentPosition + Vector2Int.down); // вниз
+            return availablePositions;
+        }
+        
+        private void CreateRoom(Vector2Int gridPosition)
+        {
+            Room newRoom = Instantiate(roomPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
+            _allRooms.Add(newRoom);
+            _roomsByGridPosition[gridPosition] = newRoom; // Сохраняем комнату по ее позиции
+        }
+        
         private void ConnectRooms(Room room1, Room room2)
         {
-            RoomConnector newConnector = Instantiate(connectorPrefab, (room1.transform.position + room2.transform.position) / 2, Quaternion.identity);
-            room1.RoomConnectors.Add(newConnector);
-            room2.RoomConnectors.Add(newConnector);
-            newConnector.Connect(room1, room2);
             room1.ConnectedRooms.Add(room2);
             room2.ConnectedRooms.Add(room1);
         }
 
-        private bool IsValidPosition(Vector3 position)
-        {
-            return position.x >= 0 && position.x < gridWidth &&
-                   position.y >= 0 && position.y < gridHeight &&
-                   !_occupiedPositions.Contains(position);
-        }
-        
-        private Room GetNextRoom(Queue<Room> roomQueue, Queue<Room> freeRoomQueue)
-        {
-            if (roomQueue.Count > 0) return roomQueue.Dequeue();
-            if (freeRoomQueue.Count > 0) return freeRoomQueue.Dequeue();
-            return null; // Если ни одной комнаты нет, возвращаем null
-        }
-        
-        private List<Vector3> GetAvailablePositions(Vector3 currentPosition)
-        {
-            List<Vector3> availablePositions = new List<Vector3>();
-            if (IsValidPosition(currentPosition + Vector3.right)) availablePositions.Add(currentPosition + Vector3.right); // вправо
-            if (IsValidPosition(currentPosition + Vector3.left)) availablePositions.Add(currentPosition + Vector3.left); // влево
-            if (IsValidPosition(currentPosition + Vector3.up)) availablePositions.Add(currentPosition + Vector3.up); // вверх
-            if (IsValidPosition(currentPosition + Vector3.down)) availablePositions.Add(currentPosition + Vector3.down); // вниз
-            return availablePositions;
-        }
-
         private void FillRooms()
         {
-            List<Room> emptyRooms = _allRooms;
+            List<Room> emptyRooms = new List<Room>(_allRooms);
             int items = numberOfAlarms + numberOfHealth + numberOfLamps + numberOfTerminals + 1;
             if (emptyRooms.Count < items) Debug.LogWarning($"Количество комнат ({emptyRooms.Count}) меньше чем предметов ({items})! Лишние предметы не будут расставлены!");;
             
             FillRoom(emptyRooms, ItemType.None, false, true); // выход
             FillRoom(emptyRooms, ItemType.Key, false, false); // ключ
-            for (int i = 0; i < numberOfTerminals; i++) FillRoom(emptyRooms, ItemType.Terminal, false, false); // терминалы
             for (int i = 0; i < numberOfHealth; i++) FillRoom(emptyRooms, ItemType.Health, false, false); // здоровье
+            for (int i = 0; i < numberOfTerminals; i++) FillRoom(emptyRooms, ItemType.Terminal, false, false); // терминалы
             for (int i = 0; i < numberOfAlarms; i++) FillRoom(emptyRooms, ItemType.None, true, false); // сигнализации
             for (int i = 0; i < numberOfLamps; i++) FillRoom(emptyRooms, ItemType.Lamp, false, false); // лампы
             while (emptyRooms.Count > 0) FillRoom(emptyRooms, ItemType.None, false, false); // пустышки
@@ -138,8 +137,18 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             Gizmos.color = Color.green;
             for (int i = 0; i < gridWidth; i++)
-                for (int j = 0; j < gridHeight; j++)
-                    Gizmos.DrawCube(new Vector3(i * xMultiplier + xOffset, j * yMultiplier + yOffset, 0), new Vector3(0.8f, 0.5f, 0.5f));
+            for (int j = 0; j < gridHeight; j++)
+                Gizmos.DrawCube(GetWorldPosition(new Vector2Int(i, j)), new Vector3(10f, 6f, 0.1f));
+        }
+        
+        [ContextMenu("GenerateGrid")]
+        private void GenerateGrid()
+        {
+            for (int i = 0; i < gridWidth; i++)
+            for (int j = 0; j < gridHeight; j++)
+            {
+                Instantiate(roomPrefab, GetWorldPosition(new Vector2Int(i, j)), Quaternion.identity);
+            }
         }
     }
 }

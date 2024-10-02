@@ -7,6 +7,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
     public class MatchController :PersistentSingleton<MatchController>
     {
         [SerializeField] private int startHealth = 17;
+        [SerializeField] private LevelGenerator levelGenerator;
         [SerializeField] private List<Room> rooms;
         private int currentHealth;
         private bool _isCard;
@@ -44,16 +45,9 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void ConfigureRooms()
         {
-            for (int i = 0; i < rooms.Count-1; i++)
-            {
-                if (i==rooms.Count-1)
-                {
-                    rooms[i].Configure(new List<Room>(){rooms[0]}, GetRandomItem(), false, true);
-                    return;
-                }
-
-                rooms[i].Configure(new List<Room>(){rooms[i+1]}, GetRandomItem(), false, false);
-            }
+            levelGenerator.GenerateLevel();
+            rooms = levelGenerator.AllRooms;
+            Debug.Log("rooms.Count = " + rooms.Count);
         }
         
         private ItemType GetRandomItem()
