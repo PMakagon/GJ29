@@ -91,7 +91,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             SetItem(item);
             this._isAlarmable = isAlarmable;
             this._hasExit = hasExit;
-            //ConnectTo(connectedRooms);
+            ConnectTo(connectedRooms);
             _isReady = true;
         }
 

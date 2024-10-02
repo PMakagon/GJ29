@@ -138,7 +138,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             Gizmos.color = Color.green;
             for (int i = 0; i < gridWidth; i++)
             for (int j = 0; j < gridHeight; j++)
-                Gizmos.DrawCube(GetWorldPosition(new Vector2Int(i, j)), new Vector3(10f, 6f, 0.1f));
+                Gizmos.DrawCube(GetWorldPosition(new Vector2Int(i, j)), new Vector3(20f, 12f, 0.1f));
         }
         
         [ContextMenu("GenerateGrid")]
