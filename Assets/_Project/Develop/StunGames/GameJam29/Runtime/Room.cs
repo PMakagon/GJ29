@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
@@ -87,13 +86,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public bool IsReady => _isReady;
 
 
-        public void Configure(List<Room> roomsToConnect, ItemType item, bool isAlarmable, bool hasExit)
+        public void Configure(ItemType item, bool isAlarmable, bool hasExit)
         {
-            // connectedRooms = roomsToConnect;
             SetItem(item);
             this._isAlarmable = isAlarmable;
             this._hasExit = hasExit;
-            // ConnectTo(roomsToConnect);
             ConnectTo(connectedRooms);
             _isReady = true;
         }
