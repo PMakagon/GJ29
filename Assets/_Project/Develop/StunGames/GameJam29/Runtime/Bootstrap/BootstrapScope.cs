@@ -1,3 +1,4 @@
+using _Project.Develop.StunGames.GameJam29.Runtime.Services;
 using VContainer;
 using VContainer.Unity;
 
@@ -13,6 +14,17 @@ namespace _Project.Develop.StunGames.EmptyProject.Runtime.Bootstrap
         }
 
         protected override void Configure(IContainerBuilder builder)
+        {
+            BindServices(builder);
+            BindScene(builder);
+        }
+        
+        private void BindServices(IContainerBuilder builder)
+        {
+            builder.Register<SceneLoaderService>(Lifetime.Singleton);
+        }
+        
+        private void BindScene(IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<BootstrapFlow>();
         }
