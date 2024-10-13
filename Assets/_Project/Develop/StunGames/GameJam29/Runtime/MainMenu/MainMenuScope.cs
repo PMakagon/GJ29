@@ -1,9 +1,9 @@
 ﻿using VContainer;
 using VContainer.Unity;
 
-namespace _Project.Develop.StunGames.EmptyProject.Runtime.Core
+namespace _Project.Develop.StunGames.GameJam29.Runtime.MainMenu
 {
-    public sealed class CoreScope : LifetimeScope
+    public class MainMenuScope : LifetimeScope
     {
         protected override void Configure(IContainerBuilder builder)
         {
@@ -12,7 +12,7 @@ namespace _Project.Develop.StunGames.EmptyProject.Runtime.Core
         
         private void BindScene(IContainerBuilder builder)
         {
-            builder.RegisterEntryPoint<CoreFlow>();
+            builder.RegisterEntryPoint<MainMenuFlow>();
         }
     }
 }

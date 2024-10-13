@@ -7,25 +7,23 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
     public class LevelGenerator : MonoBehaviour
     {
+        [SerializeField] private GameConfig _gameConfig;
         [SerializeField] private int gridWidth = 4; // ширина сетки уровня
         [SerializeField] private int gridHeight = 4; // высота сетки уровня
         [SerializeField] private float xMultiplier = 28.0f; // разница координат по оси X
         [SerializeField] private float yMultiplier = 18.0f; // разница координат по оси Y
         [SerializeField] private float roomConnectChance = 15.0f; // Вероятность соединения с уже существующей комнатой, от 0 до 100%
         [SerializeField] private Transform startGridPoint; // Стартовая точка таблицы
-        [SerializeField] private int numberOfRooms = 9; // количество комнат на уровень
-        [SerializeField] private int numberOfAlarms = 1; // количество сигнализаций на уровень
-        [SerializeField] private int numberOfLamps = 1; // количество ламп на уровень
-        [SerializeField] private int numberOfTerminals = 1; // количество терминалов на уровень
-        [SerializeField] private int numberOfHealth = 2; // количество здоровья (дополнительных кликов) на уровень
         [SerializeField] private Room roomPrefab; // Префаб комнаты
-        
         private List<Room> _allRooms = new List<Room>(); // Список всех созданных комнат
         private Dictionary<Vector2Int, Room> _roomsByGridPosition = new Dictionary<Vector2Int, Room>(); // Словарь для хранения комнат по их позициям в сетке
         private Dictionary<Room, Vector2Int> _gridPositionsByRoom = new Dictionary<Room, Vector2Int>(); // Словарь для хранения позиций в сетке по занятым ими комнатам
-        
+
         public List<Room> AllRooms => _allRooms;
         
+        public bool drawGizmos = false;
+
+
         public void GenerateLevel()
         {
             // Создаем список обрабатываемых комнат (доступных для ответвлений) 
@@ -37,7 +35,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             roomGridPositionsList.Add(startGridPosition);
             
             // Создаем остальные комнаты, ответвления 
-            while (_allRooms.Count < numberOfRooms && roomGridPositionsList.Count > 0)
+            while (_allRooms.Count < _gameConfig.RoomsOnLevel && roomGridPositionsList.Count > 0)
             {
                 // Берем случайную комнату из доступных
                 int currentGridPositionIndex = Random.Range(0, roomGridPositionsList.Count);
@@ -127,15 +125,15 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void FillRooms()
         {
             List<Room> emptyRooms = new List<Room>(_allRooms);
-            int items = numberOfAlarms + numberOfHealth + numberOfLamps + numberOfTerminals + 1;
+            int items = _gameConfig.AlarmsOnLevel + _gameConfig.HpPacksCount + _gameConfig.LampsOnLevel + _gameConfig.TerminalsCount + 1;
             if (emptyRooms.Count < items) Debug.LogWarning($"Количество комнат ({emptyRooms.Count}) меньше чем предметов ({items})! Лишние предметы не будут расставлены!");;
 
             FillExitRoom(emptyRooms); // выход
             FillRoom(emptyRooms, ItemType.Key, false); // ключ
-            for (int i = 0; i < numberOfHealth; i++) FillRoom(emptyRooms, ItemType.Health, false); // здоровье
-            for (int i = 0; i < numberOfTerminals; i++) FillRoom(emptyRooms, ItemType.Terminal, false); // терминалы
-            for (int i = 0; i < numberOfAlarms; i++) FillRoom(emptyRooms, ItemType.None, true); // сигнализации
-            for (int i = 0; i < numberOfLamps; i++) FillRoom(emptyRooms, ItemType.Lamp, false); // лампы
+            for (int i = 0; i < _gameConfig.HpPacksCount; i++) FillRoom(emptyRooms, ItemType.Health, false); // здоровье
+            for (int i = 0; i < _gameConfig.TerminalsCount; i++) FillRoom(emptyRooms, ItemType.Terminal, false); // терминалы
+            for (int i = 0; i < _gameConfig.AlarmsOnLevel; i++) FillRoom(emptyRooms, ItemType.None, true); // сигнализации
+            for (int i = 0; i < _gameConfig.LampsOnLevel; i++) FillRoom(emptyRooms, ItemType.Lamp, false); // лампы
             while (emptyRooms.Count > 0) FillRoom(emptyRooms, ItemType.None, false); // пустышки
         }
 
@@ -196,6 +194,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void OnDrawGizmos()
         {
+            if (!drawGizmos) return;
             Gizmos.color = Color.green;
             for (int i = 0; i < gridWidth; i++)
             for (int j = 0; j < gridHeight; j++)

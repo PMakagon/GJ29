@@ -1,3 +1,4 @@
+using _Project.Develop.StunGames.GameJam29.Runtime.Bootstrap;
 using _Project.Develop.StunGames.GameJam29.Runtime.Services;
 using VContainer;
 using VContainer.Unity;
@@ -21,7 +22,8 @@ namespace _Project.Develop.StunGames.EmptyProject.Runtime.Bootstrap
         
         private void BindServices(IContainerBuilder builder)
         {
-            builder.Register<SceneLoaderService>(Lifetime.Singleton);
+            builder.Register<SceneLoadingService>(Lifetime.Singleton);
+            builder.Register<UIService>(Lifetime.Singleton);
         }
         
         private void BindScene(IContainerBuilder builder)

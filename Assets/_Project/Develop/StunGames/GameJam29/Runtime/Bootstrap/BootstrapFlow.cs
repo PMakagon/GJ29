@@ -1,30 +1,36 @@
 using _Project.Develop.StunGames.GameJam29.Runtime.Services;
-using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace _Project.Develop.StunGames.EmptyProject.Runtime.Bootstrap
+namespace _Project.Develop.StunGames.GameJam29.Runtime.Bootstrap
 {
     public class BootstrapFlow : IStartable
     {
-        private readonly SceneLoaderService _sceneLoaderService;
+        private readonly SceneLoadingService _sceneLoadingService;
+        private readonly UIService _uiService;
        
         [Inject]
-        public BootstrapFlow(SceneLoaderService sceneLoaderService)
+        public BootstrapFlow(SceneLoadingService sceneLoadingService,UIService uiService)
         {
-            _sceneLoaderService = sceneLoaderService;
+            _sceneLoadingService = sceneLoadingService;
+            _uiService = uiService;
         }
         
-        public void Start()
+        private void InitializeServices()
         {
-            Debug.Log("BOOTSTRAP START");
-            ToGame();
+            _uiService.Initialize();    
         }
         
-        private void ToGame()
+        public async void Start()
         {
-            _sceneLoaderService.LoadSceneByName(SceneLoaderService.UI_SCENE);
-            _sceneLoaderService.LoadSceneByName(SceneLoaderService.CORE_SCENE);
+            await _sceneLoadingService.LoadUIScene();
+            InitializeServices();
+            ToMainMenu();
+        }
+        
+        private async void ToMainMenu()
+        {
+            await _sceneLoadingService.LoadMainMenu();
         }
     }
 }

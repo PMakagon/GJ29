@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using Random = System.Random;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
     public class Monster
     {
+        private MatchController _matchController;
         private List<Room> _map;
         private Queue<Room> _shortestWay;
         private int _damage;
@@ -17,12 +17,17 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private Random _random = new Random();
         public Room CurrentRoom => _currentRoom;
-        
-        public void Configure(List<Room> map)
+
+        public Monster(MatchController matchController, List<Room> map)
+        {
+            _matchController = matchController;
+            _map = map;
+        }
+
+        public void Initialize()
         {
             _isCooldown = false;
             _isAlarmModeOn = false;
-            _map = map;
             SubscribeEvents();
         }
         
@@ -52,7 +57,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             }
             if (_isAlarmModeOn)
             {
-                _nextRoom = _shortestWay.Peek();
+                // _nextRoom = _shortestWay.Peek();
             }
             else ChooseWay();
             MoveToRoom();
@@ -120,7 +125,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         public void HurtPlayer()
         {
-            MatchController.Instance.TakeDamage();
+            _matchController.TakeDamage();
         }
 
         public void Dispose()

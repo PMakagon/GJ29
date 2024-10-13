@@ -548,7 +548,7 @@ MonoBehaviour:
   roomConnectors: []
   roomSpriteRenderer: {fileID: 895756229109508563}
   roomHiddenSpriteRenderer: {fileID: 339150631072335213}
-  player: {fileID: 3360152993079021212}
+  playerView: {fileID: 3360152993079021212}
   monsterSpriteRenderer: {fileID: 7868684143891888294}
   itemSpriteRenderer: {fileID: 4677260655526065780}
   lampSpriteRenderer: {fileID: 725226278150138015}
@@ -558,7 +558,6 @@ MonoBehaviour:
   exitDownSpriteRenderer: {fileID: 659696194704190049}
   exitLeftSpriteRenderer: {fileID: 5074115985051013344}
   exitRightSpriteRenderer: {fileID: 7744861340464850411}
-  exitSpriteRenderer: {fileID: 7744861340464850411}
   roomDefaultSprite: {fileID: 21300000, guid: d039a3bbe67139f49a3a5473f47427cc, type: 3}
   roomSelectedSprite: {fileID: 0}
   healthSprite: {fileID: 21300000, guid: 4431bd34f5fd40e4a84434edf99e28ec, type: 3}
@@ -1057,7 +1056,7 @@ GameObject:
   - component: {fileID: 7648670278356984078}
   - component: {fileID: 3360152993079021212}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

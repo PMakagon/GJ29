@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
@@ -40,7 +41,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private List<RoomConnector> roomConnectors = new List<RoomConnector>();
         [SerializeField] private SpriteRenderer roomSpriteRenderer;
         [SerializeField] private SpriteRenderer roomHiddenSpriteRenderer;
-        [SerializeField] private Player player;
+        [SerializeField] private PlayerView playerView;
         
 
         [Header("Room Objects Renderers")] 
@@ -211,20 +212,18 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void SetPlayerInRoom()
         {
             if (_isPlayerInRoom) return;
-            Debug.Log("PLAYER INSIDE ROOM");
             _isPlayerInRoom = true;
             EventHolder.RaisePlayerEnterRoom(this); 
-            player.Show();
+            playerView.Show();
             roomHiddenSpriteRenderer.enabled = false;
         }
 
         public void RemovePlayer()
         {
-            Debug.Log("PLAYER REMOVED");
             if (!_isPlayerInRoom) return;
             _isPlayerInRoom = false;
             EventHolder.RaisePlayerExitRoom(this);
-            player.Hide();
+            playerView.Hide();
         }
 
         private void SetRoomVisible()

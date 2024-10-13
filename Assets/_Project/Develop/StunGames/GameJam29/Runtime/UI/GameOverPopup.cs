@@ -1,0 +1,26 @@
+﻿using _Project.Develop.StunGames.GameJam29.Runtime.Gameplay;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace _Project.Develop.StunGames.GameJam29.Runtime.UI
+{
+    public class GameOverPopup : UIPanel
+    {
+        [SerializeField] private Button restartBtn;
+        [SerializeField] private Button exitBtn;
+
+        private GameplayFlow _gameplayFlow;
+        
+        public void Init(GameplayFlow gameplayFlow)
+        {
+            _gameplayFlow = gameplayFlow;
+            IsInitialized = true;
+        }
+
+        protected override void BindButtons()
+        {
+            restartBtn.onClick.AddListener(_gameplayFlow.RestartGame);
+            exitBtn.onClick.AddListener(_gameplayFlow.ExitGame);
+        }
+    }
+}

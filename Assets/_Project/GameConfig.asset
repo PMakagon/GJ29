@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5494259ab3749b7b65863b9fa6a80b9, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  startHp: 19
+  roomsOnLevel: 9
+  alarmsOnLevel: 1
+  lampsOnLevel: 1
+  terminalsCount: 1
+  hpPacksCount: 2

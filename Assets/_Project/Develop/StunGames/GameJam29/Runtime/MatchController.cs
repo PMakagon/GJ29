@@ -1,28 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+using VContainer;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
-    public class MatchController :PersistentSingleton<MatchController>
+    public class MatchController : IDisposable
     {
-        [SerializeField] private int startHealth = 17;
-        [SerializeField] private LevelGenerator levelGenerator;
-        [SerializeField] private List<Room> rooms;
-        [SerializeField] private Room[,] rooms2;
-        private int currentHealth;
+        private GameConfig _gameConfig;
+        private LevelGenerator levelGenerator;
+        private List<Room> rooms;
+        private static int currentHealth;
         private bool _isCard;
         private bool _isInputActive;
         private Room previousRoom;
         private Room currentRoom;
         private Monster _monster;
 
-        public int CurrentHealth => currentHealth;
+        public static int CurrentHealth => currentHealth;
 
         public bool IsCard => _isCard;
 
         public List<Room> Rooms => rooms;
 
+        [Inject]
+        public MatchController(LevelGenerator levelGenerator,GameConfig gameConfig)
+        {
+            _gameConfig = gameConfig;
+            this.levelGenerator = levelGenerator;
+        }
+
+        public void Dispose()
+        {
+            Unsubscribe();
+        }
 
         private void Subscribe()
         {
@@ -37,17 +47,16 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             EventHolder.OnPlayerInteract -= ItemInteract;
         }
 
-        private void Start()
+        public void Initialize()
         {
             Subscribe();
-            ConfigureRooms();
-            _monster = new Monster();
-            _monster.Configure(rooms);
-            StartMatch();
+            CreateLevel();
+            _monster = new Monster(this,rooms);
+            _monster.Initialize();
         }
 
 
-        private void ConfigureRooms()
+        private void CreateLevel()
         {
             levelGenerator.GenerateLevel();
             rooms = levelGenerator.AllRooms;
@@ -75,9 +84,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public void StartMatch()
         {
-            Debug.Log("MATCH START");
             _isInputActive = true;
-            currentHealth = startHealth;
+            currentHealth = _gameConfig.StartHp;
             currentRoom = rooms[0];
             currentRoom.MoveIn();
             PlaceMonster();

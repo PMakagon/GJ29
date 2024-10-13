@@ -1,14 +1,22 @@
 ﻿using TMPro;
 using UnityEngine;
+using VContainer;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public class Player : MonoBehaviour
+    public class PlayerView : MonoBehaviour
     {
         [SerializeField] private TextMeshPro healthLabel;
         [SerializeField] private SpriteRenderer spriteRenderer;
-
+        private MatchController _matchController;
+        
+        
+        [Inject]
+        private void Construct(MatchController matchController)
+        {
+            _matchController = matchController;
+        }
         private void Awake()
         {
             Hide();
@@ -29,7 +37,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             healthLabel.gameObject.SetActive(true);
             spriteRenderer.enabled = true;
-            healthLabel.text = MatchController.Instance.CurrentHealth.ToString();
+            healthLabel.text = MatchController.CurrentHealth.ToString();
         }
 
         public void Hide()
