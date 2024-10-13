@@ -21,6 +21,15 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         Lamp,
         Terminal
     }
+    
+    public enum ExitPosition
+    {
+        None,
+        Up,
+        Down,
+        Left,
+        Right
+    }
 
     [RequireComponent(typeof(SpriteRenderer))]
     public class Room : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
@@ -41,7 +50,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private SpriteRenderer lampSpriteRenderer;
         [SerializeField] private SpriteRenderer alarmSpriteRenderer;
         [SerializeField] private SpriteRenderer terminalSpriteRenderer;
-        [SerializeField] private SpriteRenderer exitSpriteRenderer;
+        [SerializeField] private SpriteRenderer exitUpSpriteRenderer;
+        [SerializeField] private SpriteRenderer exitDownSpriteRenderer;
+        [SerializeField] private SpriteRenderer exitLeftSpriteRenderer;
+        [SerializeField] private SpriteRenderer exitRightSpriteRenderer;
+        
         [Header("Sprites")] 
         [SerializeField] private Sprite roomDefaultSprite;
         [SerializeField] private Sprite roomSelectedSprite;
@@ -65,6 +78,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private bool _isMonsterInRoom;
         private bool _isPlayerInRoom;
         private bool _hasExit;
+        private ExitPosition _exitPosition;
         private bool _isReady;
 
         public RoomState State => _state;
@@ -83,14 +97,17 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public bool HasExit => _hasExit;
 
+        public ExitPosition ExitPosition => _exitPosition;
+
         public bool IsReady => _isReady;
 
 
-        public void Configure(ItemType item, bool isAlarmable, bool hasExit)
+        public void Configure(ItemType item, bool isAlarmable, ExitPosition exitPosition)
         {
             SetItem(item);
             this._isAlarmable = isAlarmable;
-            this._hasExit = hasExit;
+            this._exitPosition = exitPosition;
+            this._hasExit = exitPosition != ExitPosition.None;
             ConnectTo(connectedRooms);
             _isReady = true;
         }
@@ -218,7 +235,27 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 _state = RoomState.Visible;
                 if (_isAlarmable) SetAlarmOn();
                 roomSpriteRenderer.sprite = roomDefaultSprite;
-                exitSpriteRenderer.enabled = _hasExit;
+                if (_hasExit)
+                    switch (_exitPosition)
+                    {
+                        case ExitPosition.None: 
+                            break;
+                        case ExitPosition.Up: 
+                            exitUpSpriteRenderer.enabled = true; 
+                            break;
+                        case ExitPosition.Down: 
+                            exitDownSpriteRenderer.enabled = true; 
+                            break;
+                        case ExitPosition.Left: 
+                            exitLeftSpriteRenderer.enabled = true; 
+                            break;
+                        case ExitPosition.Right: 
+                            exitRightSpriteRenderer.enabled = true; 
+                            break;
+                        default: 
+                            throw new ArgumentOutOfRangeException();
+                    }
+                
                 switch (itemType)
                 {
                     case ItemType.None:
