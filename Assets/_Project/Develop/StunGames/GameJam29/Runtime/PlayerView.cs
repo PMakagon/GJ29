@@ -43,6 +43,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public void MoveToRoom(Room newRoom)
         {
+            transform.SetParent(newRoom.transform);
             transform.position = newRoom.PlayerPoint.position;
             newRoom.SetPlayerInRoom();
         }

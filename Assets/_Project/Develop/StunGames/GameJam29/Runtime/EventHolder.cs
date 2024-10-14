@@ -7,7 +7,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public static event Action MatchStarted = delegate { };
         public static event Action MatchEnded = delegate { };
         public static event Action<Room> OnPlayerRoomClick = delegate { };
-        public static event Action<ItemType> OnPlayerInteract = delegate { };
+        public static event Action<ItemType> OnPlayerItemInteract = delegate { };
+        public static event Action OnPlayerAction = delegate { };
         public static event Action<Room> OnPlayerEnterRoom = delegate { };
         public static event Action<Room> onPlayerExitRoom = delegate { };
         public static event Action<Room> OnAlarmSetOn = delegate { };
@@ -17,37 +18,42 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             OnHealthChanged?.Invoke(currentHealth);
         }
-        
+
+
+        public static void RaiseMatchStarted()
+        {
+            MatchStarted?.Invoke();
+        }
+
+        public static void RaiseMatchEnded()
+        {
+            MatchEnded?.Invoke();
+        }
+
+        public static void RaisePlayerEnterRoom(Room roomToEnter)
+        {
+            OnPlayerEnterRoom?.Invoke(roomToEnter);
+        }
+
+        public static void RaisePlayerExitRoom(Room roomToExit)
+        {
+            onPlayerExitRoom?.Invoke(roomToExit);
+        }
 
         public static void RaisePlayerRoomClick(Room room)
         {
             OnPlayerRoomClick?.Invoke(room);
         }
-        
-        public static void RaiseMatchStarted()
+
+        public static void RaisePlayerItemInteract(ItemType itemType)
         {
-            MatchStarted?.Invoke();
+            OnPlayerItemInteract?.Invoke(itemType);
         }
-        
-        public static void RaiseMatchEnded()
+        public static void RaisePlayerAction()
         {
-            MatchEnded?.Invoke();
+            OnPlayerAction?.Invoke();
         }
-        
-        public static void RaisePlayerEnterRoom(Room roomToEnter)
-        {
-            OnPlayerEnterRoom?.Invoke(roomToEnter);
-        }
-        public static void RaisePlayerExitRoom(Room roomToExit)
-        {
-            onPlayerExitRoom?.Invoke(roomToExit);
-        }
-        
-        public static void RaisePlayerInteract(ItemType itemType)
-        {
-            OnPlayerInteract?.Invoke(itemType);
-        }
-        
+
         public static void RaiseAlarmSetOn(Room room)
         {
             OnAlarmSetOn?.Invoke(room);

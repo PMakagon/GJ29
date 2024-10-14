@@ -51,16 +51,16 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void SubscribeEvents()
         {
             EventHolder.OnAlarmSetOn += OnAlarmTrigger;
-            EventHolder.OnPlayerRoomClick += NextStep;
+            EventHolder.OnPlayerAction += NextStep;
         }
         
         private void UnSubscribeEvents()
         {
             EventHolder.OnAlarmSetOn -= OnAlarmTrigger;
-            EventHolder.OnPlayerRoomClick -= NextStep;
+            EventHolder.OnPlayerAction -= NextStep;
         }
 
-        private void NextStep(Room itemType)
+        private void NextStep()
         {
             if (_isCooldown)
             {
@@ -137,6 +137,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private void HurtPlayer()
         {
+            Debug.Log("MONSTER ATTACK");
             _matchController.TakeDamage();
         }
     }

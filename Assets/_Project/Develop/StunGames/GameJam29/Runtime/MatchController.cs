@@ -42,14 +42,16 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void Subscribe()
         {
             EventHolder.OnPlayerRoomClick += RoomInteract;
-            EventHolder.OnPlayerInteract += ItemInteract;
+            EventHolder.OnPlayerItemInteract += ItemItemInteract;
+            EventHolder.OnPlayerAction += TakeDamage;
         }
         
 
         private void Unsubscribe()
         {
             EventHolder.OnPlayerRoomClick -= RoomInteract;
-            EventHolder.OnPlayerInteract -= ItemInteract;
+            EventHolder.OnPlayerItemInteract -= ItemItemInteract;
+            EventHolder.OnPlayerAction -= TakeDamage;
         }
 
         public void Initialize()
@@ -111,7 +113,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void PlacePlayer()
         {
             _currentHealth = _gameConfig.godMode? 999 :_gameConfig.StartHp;
-            _currentPlayerView = _playerSpawner.SpawnPlayer(_currentRoom);
+            _currentPlayerView = _playerSpawner.SpawnPlayer();
             _currentPlayerView.SetHealth(_currentHealth);
             MovePlayer(_currentRoom);
             _currentPlayerView.Show();
@@ -127,8 +129,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (!_isInputActive) return;
             if (room == _currentRoom)
             {
-                if (room.State == RoomState.Hidden) TakeDamage();
-                if (room.State == RoomState.Visible) TakeDamage();
                 room.Interact();
                 return;
             }
@@ -138,7 +138,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 _currentRoom = room;
                 _previousRoom.RemovePlayer();
                 _currentPlayerView.MoveToRoom(_currentRoom);
-                TakeDamage();
             }
         }
         
@@ -146,12 +145,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             if (!_gameConfig.godMode) _currentHealth--;
             EventHolder.RaiseHealthChanged(_currentHealth);
+            // Debug.Log(_currentHealth);
             CheckHealth();
         }
         
         private void AddHealth()
         {
-            _currentHealth++;
+            _currentHealth+=_gameConfig.HpPacksHealthPoints;
             EventHolder.RaiseHealthChanged(_currentHealth);
         }
 
@@ -163,7 +163,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             }
         }
         
-        private void ItemInteract(ItemType item)
+        private void ItemItemInteract(ItemType item)
         {
             switch (item)
             {

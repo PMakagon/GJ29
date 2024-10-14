@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
@@ -81,6 +80,9 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private bool _hasExit;
         private ExitPosition _exitPosition;
         private bool _isReady;
+        private bool _isItemUsed;
+
+        public bool IsItemUsed => _isItemUsed;
 
         public RoomState State => _state;
 
@@ -216,6 +218,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (!_isPlayerInRoom) return;
             _isPlayerInRoom = false;
             EventHolder.RaisePlayerExitRoom(this);
+            EventHolder.RaisePlayerAction();
             playerPoint.gameObject.SetActive(false);
         }
 
@@ -224,6 +227,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (_state == RoomState.Hidden)
             {
                 _state = RoomState.Visible;
+                EventHolder.RaisePlayerAction();
                 if (_isAlarmable) SetAlarmOn();
                 roomSpriteRenderer.sprite = roomDefaultSprite;
                 if (_hasExit)
@@ -275,13 +279,14 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void ActivateItem()
         {
-            Debug.Log("ACTIVATE ITEM " + itemType);
+            if (_isItemUsed) return;
+            Debug.Log("USED " + itemType);
             switch (itemType)
             {
                 case ItemType.None:
                     break;
                 case ItemType.Health:
-                    AddHealth();
+                    UseHealth();
                     break;
                 case ItemType.Key:
                     AddKey();
@@ -296,13 +301,15 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 default:
                     break;
             }
-
-            EventHolder.RaisePlayerInteract(itemType);
+            _isItemUsed = true;
+            EventHolder.RaisePlayerItemInteract(itemType);
+            EventHolder.RaisePlayerAction();
         }
 
         private void UseTerminal()
         {
-            EventHolder.RaisePlayerInteract(ItemType.Terminal);
+            EventHolder.RaisePlayerItemInteract(ItemType.Terminal);
+            EventHolder.RaisePlayerAction();
             terminalSpriteRenderer.sprite = terminalOnSprite;
         }
 
@@ -319,7 +326,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             itemSpriteRenderer.enabled = false;
         }
 
-        private void AddHealth()
+        private void UseHealth()
         {
             itemSpriteRenderer.enabled = false;
         }

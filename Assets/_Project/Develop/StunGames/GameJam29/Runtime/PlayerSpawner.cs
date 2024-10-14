@@ -7,7 +7,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private PlayerView playerViewPrefab;
         private PlayerView _currentPlayerView;
 
-        public PlayerView SpawnPlayer(Room room)
+        public PlayerView SpawnPlayer()
         {
             _currentPlayerView = Instantiate(playerViewPrefab);
             return _currentPlayerView;
