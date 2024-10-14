@@ -125,6 +125,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             Room newRoom = Instantiate(roomPrefab, GetWorldPosition(gridPosition), Quaternion.identity, transform);
             _allRooms.Add(newRoom);
+            newRoom.gameObject.name = $"Room_{_allRooms.Count}";
             _roomsByGridPosition[gridPosition] = newRoom; // Сохраняем комнату по ее позиции
             _gridPositionsByRoom[newRoom] = gridPosition; // Сохраняем позицию по занятой ею комнате
         }

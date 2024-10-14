@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime.UI
 {
-    public class GameOverPopup : UIPanel
+    public class LevelCompletedPopup : UIPanel
     {
         [SerializeField] private Button restartBtn;
         [SerializeField] private Button exitBtn;

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using _Project.Develop.StunGames.GameJam29.Runtime.Gameplay;
+using _Project.Develop.StunGames.GameJam29.Runtime.Services;
 using UnityEngine;
 using VContainer;
 
@@ -12,7 +14,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private PlayerSpawner _playerSpawner;
         private List<Room> _rooms;
         private int _currentHealth;
-        private bool _isCard;
+        private bool _playerHasCard;
         private bool _isInputActive;
         private Room _previousRoom;
         private Room _currentRoom;
@@ -21,7 +23,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public int CurrentHealth => _currentHealth;
 
-        public bool IsCard => _isCard;
+        public bool PlayerHasCard => _playerHasCard;
 
         public List<Room> Rooms => _rooms;
 
@@ -44,14 +46,28 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             EventHolder.OnPlayerRoomClick += RoomInteract;
             EventHolder.OnPlayerItemInteract += ItemItemInteract;
             EventHolder.OnPlayerAction += TakeDamage;
+            EventHolder.OnExitClicked += CheckExit;
         }
-        
+
+        private void CheckExit(Room room)
+        {
+            if (_playerHasCard)
+            {
+                EventHolder.RaiseLevelExit();
+            }
+            else
+            {
+                Debug.Log("NO CARD");
+            }
+        }
+
 
         private void Unsubscribe()
         {
             EventHolder.OnPlayerRoomClick -= RoomInteract;
             EventHolder.OnPlayerItemInteract -= ItemItemInteract;
             EventHolder.OnPlayerAction -= TakeDamage;
+            EventHolder.OnExitClicked -= CheckExit;
         }
 
         public void Initialize()
@@ -76,7 +92,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             _rooms?.Clear();
             _previousRoom = null;
             _currentRoom = null;
-            _isCard = false;
+            _playerHasCard = false;
         }
         
         private ItemType GetRandomItem()
@@ -184,7 +200,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void AddKey()
         {
-            _isCard = true;
+            _playerHasCard = true;
         }
         
         private void EndMatch()

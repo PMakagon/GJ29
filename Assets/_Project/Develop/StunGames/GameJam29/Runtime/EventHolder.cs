@@ -5,6 +5,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
     public static class EventHolder
     {
         public static event Action MatchStarted = delegate { };
+        public static event Action OnLevelExit = delegate { };
         public static event Action MatchEnded = delegate { };
         public static event Action<Room> OnPlayerRoomClick = delegate { };
         public static event Action<ItemType> OnPlayerItemInteract = delegate { };
@@ -13,12 +14,23 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public static event Action<Room> onPlayerExitRoom = delegate { };
         public static event Action<Room> OnAlarmSetOn = delegate { };
         public static event Action<int> OnHealthChanged = delegate { };
+        public static event Action<Room> OnExitClicked = delegate { };
         
+
+        public static void RaiseLevelExit()
+        {
+            OnLevelExit?.Invoke();
+        }
+
+        public static void RaiseExitClicked(Room room)
+        {
+            OnExitClicked?.Invoke(room);
+        }
+
         public static void RaiseHealthChanged(int currentHealth)
         {
             OnHealthChanged?.Invoke(currentHealth);
         }
-
 
         public static void RaiseMatchStarted()
         {
@@ -49,6 +61,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             OnPlayerItemInteract?.Invoke(itemType);
         }
+
         public static void RaisePlayerAction()
         {
             OnPlayerAction?.Invoke();
@@ -58,6 +71,5 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             OnAlarmSetOn?.Invoke(room);
         }
-        
     }
 }

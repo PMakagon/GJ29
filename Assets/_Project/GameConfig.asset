@@ -18,8 +18,9 @@ MonoBehaviour:
   lampsOnLevel: 3
   terminalsCount: 1
   hpPacksCount: 3
+  hpPacksHealthPoints: 3
   debugModeOn: 0
   drawLevelGizmos: 0
-  alwaysShowMonster: 0
+  alwaysShowMonster: 1
   alwaysShowItems: 0
   godMode: 0

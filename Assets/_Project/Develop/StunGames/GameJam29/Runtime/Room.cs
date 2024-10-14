@@ -110,9 +110,12 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public void Configure(ItemType item, bool isAlarmable, ExitPosition exitPosition)
         {
             SetItem(item);
-            this._isAlarmable = isAlarmable;
-            this._exitPosition = exitPosition;
-            this._hasExit = exitPosition != ExitPosition.None;
+            _isAlarmable = isAlarmable;
+            _exitPosition = exitPosition;
+            _hasExit = exitPosition != ExitPosition.None;
+            if (_hasExit)
+            {
+            }
             ConnectTo(connectedRooms);
             _isReady = true;
         }

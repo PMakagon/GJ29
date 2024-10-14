@@ -35,14 +35,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Gameplay
             _matchController.StartMatch();
         }
 
-        private void GameOver()
+        public void GameOver()
         {
+            RestartGame();
         }
 
         public async void RestartGame()
         {
-            // await _sceneLoadingService.UnloadGameplayScene();
-            // await _sceneLoadingService.LoadGameplayScene();
             StartGame();
         }
 
