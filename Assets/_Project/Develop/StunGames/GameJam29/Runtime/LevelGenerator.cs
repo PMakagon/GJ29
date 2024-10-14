@@ -13,6 +13,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private float xMultiplier = 28.0f; // разница координат по оси X
         [SerializeField] private float yMultiplier = 18.0f; // разница координат по оси Y
         [SerializeField] private float roomConnectChance = 15.0f; // Вероятность соединения с уже существующей комнатой, от 0 до 100%
+        [SerializeField] private int emptyPositionsFromExit = 0; // Минимальное количество незанятых позиций сетки от выхода (0 - выход может появиться в сторону соседней существующей комнаты)
         [SerializeField] private Transform startGridPoint; // Стартовая точка таблицы
         [SerializeField] private Room roomPrefab; // Префаб комнаты
         private List<Room> _allRooms = new List<Room>(); // Список всех созданных комнат
@@ -74,6 +75,9 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
                         // Удаление стороны из списка доступных
                         availableGridPositions.RemoveAt(positionIndex);
+                        
+                        // Заканчиваем создание если достигли нужного количества комнат
+                        if (_allRooms.Count >= _gameConfig.RoomsOnLevel) break;
                     }
                 }
             }
@@ -81,6 +85,17 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             // Наполняем комнаты предметами
             FillRooms();
             // Debug.Log("AllRooms.Count = " + AllRooms.Count);
+        }
+
+        public void ClearLevel()
+        {
+            _roomsByGridPosition.Clear();
+            _gridPositionsByRoom.Clear();
+            foreach (Room room in _allRooms)
+            {
+                Destroy(room.gameObject);
+            }
+            _allRooms.Clear();
         }
         
         private Vector2Int GetRandomGridPosition() => new Vector2Int(
@@ -145,11 +160,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void FillExitRoom(List<Room> emptyRooms)
         {
-            Dictionary<Room, List<ExitPosition>> emptyEdgeRooms = GetEdgeRooms(emptyRooms); // Вычленяем крайние свободные комнаты и получаем пары комната - доступные выходы (края)
+            Dictionary<Room, List<ExitPosition>> emptyExitAvailableRooms = GetExitAvailableRooms(emptyRooms); // Вычленяем крайние свободные комнаты и получаем пары комната - доступные выходы (края)
             
-            int randomRoomIndex = Random.Range(0, emptyEdgeRooms.Count); // Выбираем случайную крайнюю свободную комнату
-            Room exitRoom = emptyEdgeRooms.ElementAt(randomRoomIndex).Key; // Получаем комнату
-            List<ExitPosition> exitPositions = emptyEdgeRooms.ElementAt(randomRoomIndex).Value; // Получаем выходы (края) комнаты
+            int randomRoomIndex = Random.Range(0, emptyExitAvailableRooms.Count); // Выбираем случайную крайнюю свободную комнату
+            Room exitRoom = emptyExitAvailableRooms.ElementAt(randomRoomIndex).Key; // Получаем комнату
+            List<ExitPosition> exitPositions = emptyExitAvailableRooms.ElementAt(randomRoomIndex).Value; // Получаем выходы (края) комнаты
             
             int randomExitPositionIndex = Random.Range(0, exitPositions.Count); // Выбираем случайный выход (край) комнаты
             ExitPosition exitPosition = exitPositions[randomExitPositionIndex]; // Получаем выход (край) комнаты
@@ -159,35 +174,49 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         }
         
         // Метод для получения крайних комнат
-        private Dictionary<Room, List<ExitPosition>> GetEdgeRooms(List<Room> rooms)
+        private Dictionary<Room, List<ExitPosition>> GetExitAvailableRooms(List<Room> rooms)
         {
-            Dictionary<Room, List<ExitPosition>> edgeRooms = new Dictionary<Room, List<ExitPosition>>();
+            Dictionary<Room, List<ExitPosition>> exitAvailableRooms = new Dictionary<Room, List<ExitPosition>>();
 
             foreach (Room room in rooms)
             {
                 Vector2Int gridPosition = _gridPositionsByRoom[room]; // Получаем координаты комнаты в сетке
                 List<ExitPosition> availableExitPositions = new List<ExitPosition>(); // Создаём список для возможных расположений выхода в комнате
-                if (IsPathToEdgeClear(gridPosition, Vector2Int.up)) availableExitPositions.Add(ExitPosition.Up); // Проверяем вверх
-                if (IsPathToEdgeClear(gridPosition, Vector2Int.down)) availableExitPositions.Add(ExitPosition.Down); // Проверяем вниз
-                if (IsPathToEdgeClear(gridPosition, Vector2Int.left)) availableExitPositions.Add(ExitPosition.Left); // Проверяем влево
-                if (IsPathToEdgeClear(gridPosition, Vector2Int.right)) availableExitPositions.Add(ExitPosition.Right); // Проверяем вправо
+                if (IsExitPathClear(room, gridPosition, Vector2Int.up)) availableExitPositions.Add(ExitPosition.Up); // Проверяем вверх
+                if (IsExitPathClear(room, gridPosition, Vector2Int.down)) availableExitPositions.Add(ExitPosition.Down); // Проверяем вниз
+                if (IsExitPathClear(room, gridPosition, Vector2Int.left)) availableExitPositions.Add(ExitPosition.Left); // Проверяем влево
+                if (IsExitPathClear(room, gridPosition, Vector2Int.right)) availableExitPositions.Add(ExitPosition.Right); // Проверяем вправо
                 
-                if (availableExitPositions.Count > 0) edgeRooms.Add(room, availableExitPositions); // Если был найден край, добавляем крайнюю комнату
+                if (availableExitPositions.Count > 0) exitAvailableRooms.Add(room, availableExitPositions); // Если был найден край, добавляем крайнюю комнату
             }
             
-            return edgeRooms;
+            return exitAvailableRooms;
         }
 
-        // Метод для проверки, свободен ли путь от комнаты до границы в указанном направлении
-        private bool IsPathToEdgeClear(Vector2Int gridPosition, Vector2Int direction)
+        // Метод для проверки, свободен ли путь от комнаты в указанном направлении
+        private bool IsExitPathClear(Room originRoom, Vector2Int originRoomGridPosition, Vector2Int direction)
         {
-            Vector2Int currentGridPosition = gridPosition;
-            while (true)
+            Vector2Int currentGridPosition = originRoomGridPosition;
+
+            for (int i = 0; i <= emptyPositionsFromExit; i++)
             {
-                currentGridPosition += direction; // Двигаемся в указанном направлении до границы уровня
+                currentGridPosition += direction; // Двигаемся в указанном направлении
                 if (!IsValidPosition(currentGridPosition)) return true;; // Если достигли границы без препятствий, путь свободен
-                if (_roomsByGridPosition.ContainsKey(currentGridPosition)) return false; // Если находим занятую позицию, то путь не свободен
+                
+                // Если не достигли границы
+                if (emptyPositionsFromExit == 0) // и минимальное расстояние равно нулю (выход может спавниться в сторону смежных комнат)
+                {
+                    if (_roomsByGridPosition.ContainsKey(currentGridPosition)) // Если соседняя позиция занята
+                        if (_roomsByGridPosition[currentGridPosition].ConnectedRooms.Contains(originRoom)) // и если туда ведёт коридор
+                            return false; // Путь не свободен
+                }
+                else // иначе, если минимальное расстояние больше 0 (выход НЕ может спавниться в сторону смежных комнат)
+                {
+                    if (_roomsByGridPosition.ContainsKey(currentGridPosition)) return false; // Если позиция занята, то путь не свободен
+                }
             }
+            
+            return true; // Если на минимальном пути не нашли препятствий, то путь свободен
         }
 
         private void OnDrawGizmos()

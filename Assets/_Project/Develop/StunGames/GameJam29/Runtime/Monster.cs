@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 
@@ -29,9 +29,23 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public void Initialize()
         {
+            SubscribeEvents();
+        }
+        
+        public void Dispose()
+        {
+            UnSubscribeEvents();
+        }
+
+        public void ResetMonster(List<Room> map, Room startRoom)
+        {
+            _map = map;
+            _shortestWay?.Clear();
+            _nextRoom = startRoom;
+            _currentRoom = startRoom;
+            _isPlayerInRoom = false;
             _isCooldown = false;
             _isAlarmModeOn = false;
-            SubscribeEvents();
         }
         
         private void SubscribeEvents()
@@ -44,11 +58,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             EventHolder.OnAlarmSetOn -= OnAlarmTrigger;
             EventHolder.OnPlayerRoomClick -= NextStep;
-        }
-
-        public void SetStartRoom(Room room)
-        {
-            _currentRoom = room;
         }
 
         private void NextStep(Room itemType)
@@ -126,14 +135,9 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             // }
         }
         
-        public void HurtPlayer()
+        private void HurtPlayer()
         {
             _matchController.TakeDamage();
-        }
-
-        public void Dispose()
-        {
-            UnSubscribeEvents();
         }
     }
 }
