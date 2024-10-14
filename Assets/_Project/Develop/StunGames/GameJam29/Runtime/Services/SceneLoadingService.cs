@@ -24,7 +24,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Services
 
         public async UniTask LoadUIScene()
         {
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(UI, LoadSceneMode.Single);
+            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(UI, LoadSceneMode.Additive);
             asyncOperation.completed += HandleCompletion;
             await asyncOperation;
             return;
@@ -78,6 +78,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Services
 
             void HandleCompletion(AsyncOperation operation)
             {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(GAMEPLAY));
                 operation.completed -= HandleCompletion;
             }
         }

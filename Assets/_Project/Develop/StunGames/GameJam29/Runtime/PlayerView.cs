@@ -1,6 +1,5 @@
 ﻿using TMPro;
 using UnityEngine;
-using VContainer;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
@@ -9,18 +8,15 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
     {
         [SerializeField] private TextMeshPro healthLabel;
         [SerializeField] private SpriteRenderer spriteRenderer;
-        private MatchController _matchController;
-        
-        
-        [Inject]
-        private void Construct(MatchController matchController)
-        {
-            _matchController = matchController;
-        }
         private void Awake()
         {
             Hide();
             EventHolder.OnHealthChanged += OnHealthChanged;
+        }
+        
+        public void SetHealth(int currentHp)
+        {
+            healthLabel.text = currentHp.ToString();
         }
 
         private void OnDestroy()
@@ -37,13 +33,18 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             healthLabel.gameObject.SetActive(true);
             spriteRenderer.enabled = true;
-            healthLabel.text = MatchController.CurrentHealth.ToString();
         }
 
         public void Hide()
         {
             healthLabel.gameObject.SetActive(false);
             spriteRenderer.enabled = false;
+        }
+
+        public void MoveToRoom(Room newRoom)
+        {
+            transform.position = newRoom.PlayerPoint.position;
+            newRoom.SetPlayerInRoom();
         }
     }
 }
