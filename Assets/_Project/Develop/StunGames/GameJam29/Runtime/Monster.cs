@@ -18,17 +18,30 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private Random _random = new Random();
         public Room CurrentRoom => _currentRoom;
 
-        public Monster(MatchController matchController, List<Room> map)
+        public Monster(MatchController matchController)
         {
             _matchController = matchController;
-            _map = map;
         }
 
         public void Initialize()
         {
+            SubscribeEvents();
+        }
+        
+        public void Dispose()
+        {
+            UnSubscribeEvents();
+        }
+
+        public void ResetMonster(List<Room> map, Room startRoom)
+        {
+            _map = map;
+            _shortestWay?.Clear();
+            _nextRoom = startRoom;
+            _currentRoom = startRoom;
+            _isPlayerInRoom = false;
             _isCooldown = false;
             _isAlarmModeOn = false;
-            SubscribeEvents();
         }
         
         private void SubscribeEvents()
@@ -41,11 +54,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             EventHolder.OnAlarmSetOn -= OnAlarmTrigger;
             EventHolder.OnPlayerRoomClick -= NextStep;
-        }
-
-        public void SetStartRoom(Room room)
-        {
-            _currentRoom = room;
         }
 
         private void NextStep(Room itemType)
@@ -123,14 +131,9 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             // }
         }
         
-        public void HurtPlayer()
+        private void HurtPlayer()
         {
             _matchController.TakeDamage();
-        }
-
-        public void Dispose()
-        {
-            UnSubscribeEvents();
         }
     }
 }

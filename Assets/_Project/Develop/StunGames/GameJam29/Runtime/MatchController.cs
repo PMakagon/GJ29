@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 using VContainer;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
@@ -32,6 +33,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public void Dispose()
         {
             Unsubscribe();
+            _monster.Dispose();
         }
 
         private void Subscribe()
@@ -50,16 +52,25 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public void Initialize()
         {
             Subscribe();
-            CreateLevel();
-            _monster = new Monster(this,rooms);
+            _monster = new Monster(this);
             _monster.Initialize();
         }
 
 
         private void CreateLevel()
         {
+            ClearLevel();
             levelGenerator.GenerateLevel();
             rooms = levelGenerator.AllRooms;
+        }
+
+        private void ClearLevel()
+        {
+            levelGenerator.ClearLevel();
+            rooms?.Clear();
+            previousRoom = null;
+            currentRoom = null;
+            _isCard = false;
         }
         
         private ItemType GetRandomItem()
@@ -78,12 +89,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             {
                 startRoom = rooms[random.Next(rooms.Count)];
             }
-            _monster.SetStartRoom(startRoom);
+            _monster.ResetMonster(rooms, startRoom);
             startRoom.SetMonster();
         }
 
         public void StartMatch()
         {
+            CreateLevel();
             _isInputActive = true;
             currentHealth = _gameConfig.StartHp;
             currentRoom = rooms[0];

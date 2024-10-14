@@ -77,6 +77,9 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
                         // Удаление стороны из списка доступных
                         availableGridPositions.RemoveAt(positionIndex);
+                        
+                        // Заканчиваем создание если достигли нужного количества комнат
+                        if (_allRooms.Count >= _gameConfig.RoomsOnLevel) break;
                     }
                 }
             }
@@ -84,6 +87,17 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             // Наполняем комнаты предметами
             FillRooms();
             Debug.Log("AllRooms.Count = " + AllRooms.Count);
+        }
+
+        public void ClearLevel()
+        {
+            _roomsByGridPosition.Clear();
+            _gridPositionsByRoom.Clear();
+            foreach (Room room in _allRooms)
+            {
+                Destroy(room.gameObject);
+            }
+            _allRooms.Clear();
         }
         
         private Vector2Int GetRandomGridPosition() => new Vector2Int(
