@@ -41,8 +41,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Gameplay
 
         public async void RestartGame()
         {
-            await _sceneLoadingService.UnloadGameplayScene();
-            await _sceneLoadingService.LoadGameplayScene();
+            // await _sceneLoadingService.UnloadGameplayScene();
+            // await _sceneLoadingService.LoadGameplayScene();
             StartGame();
         }
 
