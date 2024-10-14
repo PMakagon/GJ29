@@ -64,16 +64,16 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void CreateLevel()
         {
             ClearLevel();
-            levelGenerator.GenerateLevel();
-            rooms = levelGenerator.AllRooms;
+            _levelGenerator.GenerateLevel();
+            _rooms = _levelGenerator.AllRooms;
         }
 
         private void ClearLevel()
         {
-            levelGenerator.ClearLevel();
-            rooms?.Clear();
-            previousRoom = null;
-            currentRoom = null;
+            _levelGenerator.ClearLevel();
+            _rooms?.Clear();
+            _previousRoom = null;
+            _currentRoom = null;
             _isCard = false;
         }
         
@@ -93,8 +93,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             {
                 startRoom = _rooms[random.Next(_rooms.Count)];
             }
-             _monster.ResetMonster(rooms, startRoom);
-            _monster.SetStartRoom(startRoom);
+            _monster.ResetMonster(_rooms, startRoom);
             startRoom.SetMonsterInRoom(_gameConfig.alwaysShowMonster);
         }
 
