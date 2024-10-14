@@ -263,7 +263,7 @@ MonoBehaviour:
   roomConnectChance: 15
   startGridPoint: {fileID: 524116987}
   roomPrefab: {fileID: 2604995490422202281, guid: fa07772a5355631478c8c77859b3a0a6, type: 3}
-  drawGizmos: 1
+  drawGizmos: 0
 --- !u!4 &397805301
 Transform:
   m_ObjectHideFlags: 0
@@ -273,7 +273,7 @@ Transform:
   m_GameObject: {fileID: 397805299}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -8.825647, y: -309.11453, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -697,6 +697,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1169396818}
   - component: {fileID: 1169396819}
+  - component: {fileID: 1169396820}
   m_Layer: 0
   m_Name: GameplayScope
   m_TagString: Untagged
@@ -737,6 +738,20 @@ MonoBehaviour:
   autoInjectGameObjects: []
   _gameConfig: {fileID: 11400000, guid: e42b641b2b3422d4e8a08476c6137cdf, type: 2}
   _levelGenerator: {fileID: 397805300}
+  _playerSpawner: {fileID: 1169396820}
+--- !u!114 &1169396820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169396817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56cd6f9f590a4c2b8c95707780fefc8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerViewPrefab: {fileID: 7627667044418729381, guid: c39bb9077ba869e49a446337eb72dad8, type: 3}
 --- !u!1 &1214406875
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,7 +839,7 @@ Transform:
   m_GameObject: {fileID: 1214406875}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.825647, y: 16.114521, z: -92.01773}
+  m_LocalPosition: {x: 2, y: -293, z: -92.01773}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

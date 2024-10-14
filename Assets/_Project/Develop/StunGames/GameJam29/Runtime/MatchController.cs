@@ -7,26 +7,29 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
     public class MatchController : IDisposable
     {
         private GameConfig _gameConfig;
-        private LevelGenerator levelGenerator;
-        private List<Room> rooms;
-        private static int currentHealth;
+        private LevelGenerator _levelGenerator;
+        private PlayerSpawner _playerSpawner;
+        private List<Room> _rooms;
+        private int _currentHealth;
         private bool _isCard;
         private bool _isInputActive;
-        private Room previousRoom;
-        private Room currentRoom;
+        private Room _previousRoom;
+        private Room _currentRoom;
         private Monster _monster;
+        private PlayerView _currentPlayerView;
 
-        public static int CurrentHealth => currentHealth;
+        public int CurrentHealth => _currentHealth;
 
         public bool IsCard => _isCard;
 
-        public List<Room> Rooms => rooms;
+        public List<Room> Rooms => _rooms;
 
         [Inject]
-        public MatchController(LevelGenerator levelGenerator,GameConfig gameConfig)
+        public MatchController(LevelGenerator levelGenerator,GameConfig gameConfig, PlayerSpawner playerSpawner)
         {
             _gameConfig = gameConfig;
-            this.levelGenerator = levelGenerator;
+            _levelGenerator = levelGenerator;
+            _playerSpawner = playerSpawner;
         }
 
         public void Dispose()
@@ -51,15 +54,15 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             Subscribe();
             CreateLevel();
-            _monster = new Monster(this,rooms);
+            _monster = new Monster(this,_rooms,_gameConfig);
             _monster.Initialize();
         }
 
 
         private void CreateLevel()
         {
-            levelGenerator.GenerateLevel();
-            rooms = levelGenerator.AllRooms;
+            _levelGenerator.GenerateLevel();
+            _rooms = _levelGenerator.AllRooms;
         }
         
         private ItemType GetRandomItem()
@@ -73,62 +76,75 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void PlaceMonster()
         {
             var random = new System.Random();
-            Room startRoom = rooms[random.Next(rooms.Count)];
-            while (startRoom == currentRoom)
+            Room startRoom = _rooms[random.Next(_rooms.Count)];
+            while (startRoom == _currentRoom)
             {
-                startRoom = rooms[random.Next(rooms.Count)];
+                startRoom = _rooms[random.Next(_rooms.Count)];
             }
             _monster.SetStartRoom(startRoom);
-            startRoom.SetMonster();
+            startRoom.SetMonsterInRoom(_gameConfig.alwaysShowMonster);
         }
 
         public void StartMatch()
         {
             _isInputActive = true;
-            currentHealth = _gameConfig.StartHp;
-            currentRoom = rooms[0];
-            currentRoom.MoveIn();
+            _currentRoom = _rooms[0];
+            PlacePlayer();
             PlaceMonster();
             EventHolder.RaiseMatchStarted();
             _isInputActive = true;
         }
-        
+
+        private void PlacePlayer()
+        {
+            _currentHealth = _gameConfig.godMode? 999 :_gameConfig.StartHp;
+            _currentPlayerView = _playerSpawner.SpawnPlayer(_currentRoom);
+            _currentPlayerView.SetHealth(_currentHealth);
+            MovePlayer(_currentRoom);
+            _currentPlayerView.Show();
+        }
+
+        private void MovePlayer(Room room)
+        {
+            _currentPlayerView.MoveToRoom(room);
+        }
+
         private void RoomInteract(Room room)
         {
             if (!_isInputActive) return;
-            if (room == currentRoom)
+            if (room == _currentRoom)
             {
                 if (room.State == RoomState.Hidden) TakeDamage();
                 if (room.State == RoomState.Visible) TakeDamage();
                 room.Interact();
                 return;
             }
-            if (currentRoom.ConnectedRooms.Contains(room))
+            if (_currentRoom.ConnectedRooms.Contains(room))
             {
-                previousRoom = currentRoom;
-                currentRoom = room;
-                previousRoom.RemovePlayer();
-                currentRoom.MoveIn();
+                _previousRoom = _currentRoom;
+                _currentRoom = room;
+                _previousRoom.RemovePlayer();
+                _currentPlayerView.MoveToRoom(_currentRoom);
                 TakeDamage();
             }
         }
         
         public void TakeDamage()
         {
-            currentHealth--;
-            EventHolder.RaiseHealthChanged(currentHealth);
+            if (!_gameConfig.godMode) _currentHealth--;
+            EventHolder.RaiseHealthChanged(_currentHealth);
             CheckHealth();
         }
         
         private void AddHealth()
         {
-            currentHealth++;
-            EventHolder.RaiseHealthChanged(currentHealth);
+            _currentHealth++;
+            EventHolder.RaiseHealthChanged(_currentHealth);
         }
 
         private void CheckHealth()
         {
-            if (currentHealth<=0)
+            if (_currentHealth<=0)
             {
                 EndMatch();
             }

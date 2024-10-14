@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 using Random = System.Random;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
@@ -7,6 +8,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
     {
         private MatchController _matchController;
         private List<Room> _map;
+        private GameConfig _gameConfig;
         private Queue<Room> _shortestWay;
         private int _damage;
         private Room _nextRoom;
@@ -17,11 +19,12 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private Random _random = new Random();
         public Room CurrentRoom => _currentRoom;
-
-        public Monster(MatchController matchController, List<Room> map)
+        
+        public Monster(MatchController matchController, List<Room> map,GameConfig gameConfig)
         {
             _matchController = matchController;
             _map = map;
+            _gameConfig = gameConfig;
         }
 
         public void Initialize()
@@ -68,7 +71,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         {
             _currentRoom.RemoveMonster();
             _currentRoom = _nextRoom;
-            _currentRoom.SetMonster();
+            _currentRoom.SetMonsterInRoom(_gameConfig.alwaysShowMonster);
         }
         
         private void ScanRoom()

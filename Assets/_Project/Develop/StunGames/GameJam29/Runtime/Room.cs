@@ -41,7 +41,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private List<RoomConnector> roomConnectors = new List<RoomConnector>();
         [SerializeField] private SpriteRenderer roomSpriteRenderer;
         [SerializeField] private SpriteRenderer roomHiddenSpriteRenderer;
-        [SerializeField] private PlayerView playerView;
+        [SerializeField] private Transform playerPoint;
         
 
         [Header("Room Objects Renderers")] 
@@ -102,6 +102,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public bool IsReady => _isReady;
 
+        public Transform PlayerPoint => playerPoint;
+
 
         public void Configure(ItemType item, bool isAlarmable, ExitPosition exitPosition)
         {
@@ -115,7 +117,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public void Interact()
         {
-            Debug.Log("INTERACT");
             if (_state == RoomState.Hidden)
             {
                 SetRoomVisible();
@@ -125,14 +126,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (_state == RoomState.Visible && itemType != ItemType.None)
             {
                 ActivateItem();
-            }
-        }
-
-        public void MoveIn()
-        {
-            if (!_isPlayerInRoom)
-            {
-                SetPlayerInRoom();
             }
         }
 
@@ -191,11 +184,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         #endregion
 
-        public void SetMonster()
+        public void SetMonsterInRoom(bool isAlwaysVisible = false)
         {
             if (_isMonsterInRoom) return;
             _isMonsterInRoom = true;
-            monsterSpriteRenderer.enabled = true;
+            monsterSpriteRenderer.enabled =  isAlwaysVisible;
             if (_isPlayerInRoom || _state == RoomState.Lighted)
             {
                 monsterSpriteRenderer.enabled = true;
@@ -209,12 +202,12 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             monsterSpriteRenderer.enabled = false;
         }
 
-        private void SetPlayerInRoom()
+        public void SetPlayerInRoom()
         {
             if (_isPlayerInRoom) return;
             _isPlayerInRoom = true;
             EventHolder.RaisePlayerEnterRoom(this); 
-            playerView.Show();
+            playerPoint.gameObject.SetActive(true);
             roomHiddenSpriteRenderer.enabled = false;
         }
 
@@ -223,12 +216,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (!_isPlayerInRoom) return;
             _isPlayerInRoom = false;
             EventHolder.RaisePlayerExitRoom(this);
-            playerView.Hide();
+            playerPoint.gameObject.SetActive(false);
         }
 
         private void SetRoomVisible()
         {
-            Debug.Log("SET VISIBLE");
             if (_state == RoomState.Hidden)
             {
                 _state = RoomState.Visible;

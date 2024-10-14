@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5494259ab3749b7b65863b9fa6a80b9, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  startHp: 19
-  roomsOnLevel: 9
-  alarmsOnLevel: 1
-  lampsOnLevel: 1
+  startHp: 25
+  roomsOnLevel: 15
+  alarmsOnLevel: 2
+  lampsOnLevel: 3
   terminalsCount: 1
-  hpPacksCount: 2
+  hpPacksCount: 3
+  debugModeOn: 0
+  drawLevelGizmos: 0
+  alwaysShowMonster: 0
+  alwaysShowItems: 0
+  godMode: 0

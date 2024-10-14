@@ -20,8 +20,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private Dictionary<Room, Vector2Int> _gridPositionsByRoom = new Dictionary<Room, Vector2Int>(); // Словарь для хранения позиций в сетке по занятым ими комнатам
 
         public List<Room> AllRooms => _allRooms;
-        
-        public bool drawGizmos = false;
 
 
         public void GenerateLevel()
@@ -82,7 +80,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
             // Наполняем комнаты предметами
             FillRooms();
-            Debug.Log("AllRooms.Count = " + AllRooms.Count);
+            // Debug.Log("AllRooms.Count = " + AllRooms.Count);
         }
         
         private Vector2Int GetRandomGridPosition() => new Vector2Int(
@@ -110,7 +108,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private void CreateRoom(Vector2Int gridPosition)
         {
-            Room newRoom = Instantiate(roomPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
+            Room newRoom = Instantiate(roomPrefab, GetWorldPosition(gridPosition), Quaternion.identity, transform);
             _allRooms.Add(newRoom);
             _roomsByGridPosition[gridPosition] = newRoom; // Сохраняем комнату по ее позиции
             _gridPositionsByRoom[newRoom] = gridPosition; // Сохраняем позицию по занятой ею комнате
@@ -194,7 +192,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void OnDrawGizmos()
         {
-            if (!drawGizmos) return;
+            if (!_gameConfig.drawLevelGizmos) return;
             Gizmos.color = Color.green;
             for (int i = 0; i < gridWidth; i++)
             for (int j = 0; j < gridHeight; j++)

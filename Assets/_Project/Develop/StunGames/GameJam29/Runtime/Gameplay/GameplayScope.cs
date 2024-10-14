@@ -8,6 +8,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Gameplay
     {
         [SerializeField] private GameConfig _gameConfig;
         [SerializeField] private LevelGenerator _levelGenerator;
+        [SerializeField] private PlayerSpawner _playerSpawner;
         
         protected override void Configure(IContainerBuilder builder)
         {
@@ -17,8 +18,9 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Gameplay
 
         private void BindServices(IContainerBuilder builder)
         {
-            builder.Register<GameConfig>(Lifetime.Singleton);
+            builder.RegisterComponent<GameConfig>(_gameConfig);
             builder.RegisterComponent<LevelGenerator>(_levelGenerator);
+            builder.RegisterComponent<PlayerSpawner>(_playerSpawner);
             builder.Register<MatchController>(Lifetime.Singleton);
         }
 
