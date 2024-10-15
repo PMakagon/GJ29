@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Develop.StunGames.GameJam29.Runtime.Gameplay;
 using _Project.Develop.StunGames.GameJam29.Runtime.Services;
 using UnityEngine;
@@ -106,11 +107,9 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void PlaceMonster()
         {
             var random = new System.Random();
-            Room startRoom = _rooms[random.Next(_rooms.Count)];
-            while (startRoom == _currentRoom)
-            {
-                startRoom = _rooms[random.Next(_rooms.Count)];
-            }
+            List<Room> monsterSpawnRooms = _currentRoom.GetRoomsBeyondDistance(_gameConfig.MonsterMinSpawnDistance);
+            if (!monsterSpawnRooms.Any()) monsterSpawnRooms = _currentRoom.GetRoomsAtMaxDistance();
+            Room startRoom = monsterSpawnRooms[random.Next(monsterSpawnRooms.Count)];
             _monster.ResetMonster(_rooms, startRoom);
             startRoom.SetMonsterInRoom(_gameConfig.alwaysShowMonster);
         }
@@ -120,8 +119,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             CreateLevel();
             _isInputActive = true;
             _currentRoom = _rooms[0];
-            PlacePlayer();
             PlaceMonster();
+            PlacePlayer();
             EventHolder.RaiseMatchStarted();
             _isInputActive = true;
         }

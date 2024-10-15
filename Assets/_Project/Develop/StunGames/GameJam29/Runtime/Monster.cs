@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
@@ -44,7 +45,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             _nextRoom = startRoom;
             _currentRoom = startRoom;
             _isPlayerInRoom = false;
-            _isCooldown = false;
+            _isCooldown = true;
             _isAlarmModeOn = false;
         }
         
@@ -65,15 +66,14 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (_isCooldown)
             {
                 _isCooldown = false;
-                return;
             }
-            if (_isAlarmModeOn)
+            else
             {
-                // _nextRoom = _shortestWay.Peek();
+                ChooseWay();
+                MoveToRoom();
             }
-            else ChooseWay();
-            MoveToRoom();
             ScanRoom();
+            if (!_isAlarmModeOn && _random.Next(1, 100) < _gameConfig.MonsterStayChance) _isCooldown = true;
         }
 
         private void MoveToRoom()
@@ -84,7 +84,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         }
         
         private void ScanRoom()
-        {
+        { 
             if (_currentRoom.IsPlayerInRoom)
             {
                 HurtPlayer();
@@ -96,43 +96,29 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void OnAlarmTrigger(Room targetRoom)
         {
             _isAlarmModeOn = true;
-            FindShortestWay(targetRoom);
+            _shortestWay = _currentRoom.GetShortestPath(targetRoom);
+            if (_currentRoom == _shortestWay.Peek()) _shortestWay.Dequeue();
         }
         
         private void ChooseWay()
         {
-            var nextRoomIndex = _random.Next(0, _currentRoom.ConnectedRooms.Count);
-            _nextRoom = _currentRoom.ConnectedRooms[nextRoomIndex];
-        }
-
-        private void FindShortestWay(Room targetRoom)
-        {
-            // int roomCount = _map.Count;
-            // var dist = new Dictionary<Room, int>(roomCount); // Массив расстояний
-            // var parent = new List<Room>(roomCount); // Массив для восстановления пути
-            //
-            // for (int i = 0; i < roomCount; i++)
-            // {
-            //     dist[_map[i]] = int.MaxValue; // Инициализация всех расстояний как бесконечность
-            //     parent[i] = null;         // Инициализация всех родителей как -1
-            // }
-            //
-            // dist[_currentRoom] = 0; // Расстояние до стартовой вершины = 0
-            // Queue<Room> queue = new Queue<Room>();
-            // queue.Enqueue(_currentRoom);
-            //
-            // while (queue.Count > 0)
-            // {
-            //     Room curr = queue.Dequeue();
-            //
-            //     foreach (var connectedRoom in curr.ConnectedRooms)
-            //     {
-            //         if (dist[connectedRoom] == int.MaxValue)
-            //         {
-            //             dist[connectedRoom] = dist[curr] + 1;
-            //         }
-            //     }
-            // }
+            if (_isAlarmModeOn)
+            {
+                if (_shortestWay.Any())
+                {
+                    _nextRoom = _shortestWay.Dequeue();
+                }
+                if (!_shortestWay.Any())
+                {
+                    _isAlarmModeOn = false;
+                    _isCooldown = true;
+                }
+            }
+            else
+            {
+                var nextRoomIndex = _random.Next(0, _currentRoom.ConnectedRooms.Count);
+                _nextRoom = _currentRoom.ConnectedRooms[nextRoomIndex];
+            }
         }
         
         private void HurtPlayer()
