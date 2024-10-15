@@ -733,7 +733,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: _Project.Develop.StunGames.EmptyProject.Runtime.Bootstrap.BootstrapScope
+    TypeName: _Project.Develop.StunGames.GameJam29.Runtime.Bootstrap.BootstrapScope
   autoRun: 1
   autoInjectGameObjects: []
   _gameConfig: {fileID: 11400000, guid: e42b641b2b3422d4e8a08476c6137cdf, type: 2}

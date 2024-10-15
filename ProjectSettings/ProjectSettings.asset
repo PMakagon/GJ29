@@ -161,6 +161,7 @@ PlayerSettings:
   androidMinAspectRatio: 1
   applicationIdentifier:
     Android: com.StunGames.GameJam29
+    Standalone: com.StunGames.GameJam29
   buildNumber:
     Bratwurst: 0
     Standalone: 0

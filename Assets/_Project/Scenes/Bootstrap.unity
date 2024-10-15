@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &1169396817
+--- !u!1 &707116874
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,8 +127,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1169396818}
-  - component: {fileID: 1169396819}
+  - component: {fileID: 707116876}
+  - component: {fileID: 707116875}
   m_Layer: 0
   m_Name: BootstrapScope
   m_TagString: Untagged
@@ -136,28 +136,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1169396818
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1169396817}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1169396819
+--- !u!114 &707116875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1169396817}
+  m_GameObject: {fileID: 707116874}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea02038707bc947469b620fa7d1514b0, type: 3}
@@ -167,6 +152,21 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+--- !u!4 &707116876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707116874}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1887411257
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,6 +343,7 @@ MonoBehaviour:
   heartBeat2: {fileID: 11400000, guid: d2eb6c1ae5206724989f4c285b00a2fa, type: 2}
   heartBeat3: {fileID: 11400000, guid: c58d32f346c9adc48a1a13974c817215, type: 2}
   heartBeat4: {fileID: 11400000, guid: 068aaf78745e9904491ebc810011b0b4, type: 2}
+  enter: {fileID: 0}
   alarm: {fileID: 11400000, guid: 9aa80c92813d50645a4590f86f97b654, type: 2}
   lamp: {fileID: 11400000, guid: dc1e4e86009f1724c8a30860cb7567af, type: 2}
   terminal: {fileID: 11400000, guid: d57cf84d6fea9ce4abc770e5ab43174f, type: 2}
@@ -370,5 +371,5 @@ AudioListener:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1169396818}
+  - {fileID: 707116876}
   - {fileID: 1887411261}
