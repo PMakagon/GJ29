@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
 using TMPro;
 using UnityEngine;
@@ -111,6 +112,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
 
         public List<Room> ConnectedRooms => connectedRooms;
 
+        public List<RoomConnector> RoomConnectors => roomConnectors;
+
         public ItemType ItemType => itemType;
 
         public bool IsAlarmable => _isAlarmable;
@@ -140,7 +143,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
             if (_hasExit)
             {
             }
-            ConnectTo(connectedRooms);
             _isReady = true;
         }
 
@@ -190,18 +192,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
                     break;
             }
         }
-
-        private void ConnectTo(List<Room> roomsToConnect)
-        {
-            foreach (var connectedRoom in roomsToConnect)
-            {
-                var newConnector = Instantiate(connectorPrefab, transform);
-                roomConnectors.Add(newConnector);
-                newConnector.Connect(this, connectedRoom);
-            }
-        }
-
-
+        
         #region Input
 
         public void OnPointerClick(PointerEventData eventData)
@@ -258,6 +249,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
             EventHolder.RaisePlayerExitRoom(this);
             //EventHolder.RaisePlayerAction();
             playerPoint.gameObject.SetActive(false);
+        }
+
+        public void VisitRoomConnector(Room targetRoom)
+        {
+            // ищем коридор участвующий в переходе и помечаем его 
+            foreach (RoomConnector roomConnector in roomConnectors.Where(roomConnector => roomConnector.TargetRoom == targetRoom || roomConnector.OriginRoom == targetRoom))
+                roomConnector.Visit();
         }
 
         private void SetRoomVisible()

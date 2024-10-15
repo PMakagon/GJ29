@@ -76,7 +76,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public void Initialize()
         {
             Subscribe();
-            CreateLevel();
             _monster = new Monster(this,_rooms,_gameConfig);
             _monster.Initialize();
         }
@@ -153,6 +152,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             {
                 _previousRoom = _currentRoom;
                 _currentRoom = room;
+                _previousRoom.VisitRoomConnector(room);
                 _previousRoom.RemovePlayer();
                 _currentPlayerView.MoveToRoom(_currentRoom);
             }

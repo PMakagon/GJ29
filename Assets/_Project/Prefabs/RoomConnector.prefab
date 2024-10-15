@@ -151,7 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8d67b4d677449aae0be113bf997cc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomToConnect: {fileID: 0}
-  _lineRenderer: {fileID: 8371826155514702442}
+  originRoom: {fileID: 0}
+  targetRoom: {fileID: 0}
+  lineRenderer: {fileID: 8371826155514702442}
   lineMaterial: {fileID: 2100000, guid: 099b8ae5b1d69bf4c8bbd81044e692e3, type: 2}
   dottedMaterial: {fileID: 2100000, guid: 7af7f2f422de6884da54c8edc63342ec, type: 2}

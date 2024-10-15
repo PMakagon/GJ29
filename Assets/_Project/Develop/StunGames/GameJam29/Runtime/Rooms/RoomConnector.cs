@@ -5,37 +5,46 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
     [RequireComponent(typeof(LineRenderer))]
     public class RoomConnector : MonoBehaviour
     {
-        [SerializeField] private Room roomToConnectTest;
-        [SerializeField] private LineRenderer _lineRenderer;
+        [SerializeField] private Room originRoom;
+        [SerializeField] private Room targetRoom;
+        [SerializeField] private LineRenderer lineRenderer;
         [SerializeField] private Material lineMaterial;
         [SerializeField] private Material dottedMaterial;
-        private bool isVisited;
+        private bool _isVisited;
+        
+        public Room OriginRoom => originRoom;
 
+        public Room TargetRoom => targetRoom;
+
+        public bool IsVisited => _isVisited;
+        
         private void Awake()
         {
-            _lineRenderer = GetComponent<LineRenderer>();
-            _lineRenderer.material = lineMaterial;
-            _lineRenderer.enabled = false;
+            lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer.material = dottedMaterial;
+            lineRenderer.enabled = false;
         }
         
-        public void Connect(Room room1, Room room2)
+        public void Connect(Room originRoomToConnect, Room targetRoomToConnect)
         {
-            _lineRenderer.enabled = true;
-            _lineRenderer.SetPosition(0, room1.transform.position);
-            _lineRenderer.SetPosition(1, room2.transform.position);
+            lineRenderer.enabled = true;
+            originRoom = originRoomToConnect;
+            targetRoom = targetRoomToConnect;
+            lineRenderer.SetPosition(0, originRoom.transform.position);
+            lineRenderer.SetPosition(1, targetRoom.transform.position);
         }
         [ContextMenu("CONNECT")]
         public void ConnectTest()
         {
-            _lineRenderer.SetPosition(0, transform.position);
-            _lineRenderer.SetPosition(1, roomToConnectTest.transform.position);
+            lineRenderer.SetPosition(0, originRoom.transform.position);
+            lineRenderer.SetPosition(1, targetRoom.transform.position);
         }
 
         [ContextMenu("VISIT")]
         public void Visit()
         {
-            _lineRenderer.material = dottedMaterial;
-            isVisited = true;
+            lineRenderer.material = lineMaterial;
+            _isVisited = true;
         }
         
 }

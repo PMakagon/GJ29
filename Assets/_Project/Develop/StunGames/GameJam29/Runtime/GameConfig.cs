@@ -12,6 +12,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private int lampsOnLevel = 1;
         [SerializeField] private int terminalsCount = 1; 
         [SerializeField] private int hpPacksCount =1;
+        [SerializeField] private float roomConnectChance = 15f; // Вероятность соединения уже существующих комнат, от 0 до 100%
         [Header("ITEMS SETTINGS")] 
         [SerializeField] private int hpPacksHealthPoints =3;
         [Header("MONSTER SETTINGS")] 
@@ -38,6 +39,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public int HpPacksCount => hpPacksCount;
 
         public int HpPacksHealthPoints => hpPacksHealthPoints;
+
+        public float RoomConnectChance => roomConnectChance;
 
         public float MonsterStayChance => monsterStayChance;
 
