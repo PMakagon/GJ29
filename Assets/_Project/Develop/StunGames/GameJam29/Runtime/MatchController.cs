@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
-using _Project.Develop.StunGames.GameJam29.Runtime.Gameplay;
-using _Project.Develop.StunGames.GameJam29.Runtime.Services;
+using _Project.Develop.StunGames.GameJam29.Runtime.Rooms;
 using UnityEngine;
 using VContainer;
 
@@ -46,7 +45,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void Subscribe()
         {
             EventHolder.OnPlayerRoomClick += RoomInteract;
-            EventHolder.OnPlayerItemInteract += ItemItemInteract;
+            EventHolder.OnPlayerItemInteract += PlayerItemInteract;
             EventHolder.OnPlayerAction += TakeDamage;
             EventHolder.OnExitClicked += CheckExit;
         }
@@ -69,7 +68,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void Unsubscribe()
         {
             EventHolder.OnPlayerRoomClick -= RoomInteract;
-            EventHolder.OnPlayerItemInteract -= ItemItemInteract;
+            EventHolder.OnPlayerItemInteract -= PlayerItemInteract;
             EventHolder.OnPlayerAction -= TakeDamage;
             EventHolder.OnExitClicked -= CheckExit;
         }
@@ -181,7 +180,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             }
         }
         
-        private void ItemItemInteract(ItemType item)
+        private void PlayerItemInteract(ItemType item)
         {
             switch (item)
             {

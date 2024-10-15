@@ -4,7 +4,7 @@ using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace _Project.Develop.StunGames.GameJam29.Runtime
+namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
 {
     [Serializable]
     public enum RoomState
@@ -44,7 +44,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private Transform playerPoint;
         
 
-        [Header("Room Objects Renderers")] 
+        [Header("Rooms Objects Renderers")] 
         [SerializeField] private SpriteRenderer monsterSpriteRenderer;
         
         [SerializeField] private SpriteRenderer itemSpriteRenderer;
@@ -307,7 +307,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             }
             _isItemUsed = true;
             EventHolder.RaisePlayerItemInteract(itemType);
-            EventHolder.RaisePlayerAction();
         }
 
         private void UseLamp()
@@ -315,6 +314,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             _state = RoomState.Lighted;
             lampSpriteRenderer.sprite = lightOnSprite;
             SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.Lamp);
+            EventHolder.RaisePlayerAction();
         }
 
         private void UseTerminal()

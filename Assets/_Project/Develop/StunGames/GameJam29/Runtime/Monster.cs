@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
+using _Project.Develop.StunGames.GameJam29.Runtime.Rooms;
 using UnityEngine;
 using Random = System.Random;
 using RandomUnity = UnityEngine.Random;
@@ -90,7 +91,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private static void PlayMoveSound()
         {
             var random = RandomUnity.value;
-            if (random>0.7f)
+            if (random>0.8f)
             {
                 SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.MetalSounds[RandomUnity.Range(0, SoundDataLibrary.Instance.MetalSounds.Count)]);
             }

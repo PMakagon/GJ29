@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Develop.StunGames.GameJam29.Runtime {
+namespace _Project.Develop.StunGames.GameJam29.Runtime.Utils {
     public class PersistentSingleton<T> : MonoBehaviour where T : Component {
         public bool AutoUnparentOnAwake = true;
 

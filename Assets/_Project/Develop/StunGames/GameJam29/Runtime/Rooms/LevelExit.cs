@@ -1,8 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace _Project.Develop.StunGames.GameJam29.Runtime
+namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
 {
     public class LevelExit : MonoBehaviour,IPointerClickHandler
     {

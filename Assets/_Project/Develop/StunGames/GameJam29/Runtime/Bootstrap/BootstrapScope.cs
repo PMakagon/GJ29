@@ -1,9 +1,8 @@
-using _Project.Develop.StunGames.GameJam29.Runtime.Bootstrap;
 using _Project.Develop.StunGames.GameJam29.Runtime.Services;
 using VContainer;
 using VContainer.Unity;
 
-namespace _Project.Develop.StunGames.EmptyProject.Runtime.Bootstrap
+namespace _Project.Develop.StunGames.GameJam29.Runtime.Bootstrap
 {
     public sealed class BootstrapScope : LifetimeScope
     {

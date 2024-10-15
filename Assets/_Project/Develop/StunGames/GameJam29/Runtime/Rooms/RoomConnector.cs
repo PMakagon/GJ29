@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace _Project.Develop.StunGames.GameJam29.Runtime
+namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
 {
     [RequireComponent(typeof(LineRenderer))]
     public class RoomConnector : MonoBehaviour

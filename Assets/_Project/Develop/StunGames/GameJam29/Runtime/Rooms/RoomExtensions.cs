@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace _Project.Develop.StunGames.GameJam29.Runtime
+namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
 {
     public static class RoomExtensions
     {
