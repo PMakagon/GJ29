@@ -89,6 +89,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         public List<Room> ConnectedRooms => connectedRooms;
 
+        public List<RoomConnector> RoomConnectors => roomConnectors;
+
         public ItemType ItemType => itemType;
 
         public bool IsAlarmable => _isAlarmable;
@@ -117,7 +119,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (_hasExit)
             {
             }
-            ConnectTo(connectedRooms);
             _isReady = true;
         }
 
@@ -158,18 +159,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                     break;
             }
         }
-
-        private void ConnectTo(List<Room> roomsToConnect)
-        {
-            foreach (var connectedRoom in roomsToConnect)
-            {
-                var newConnector = Instantiate(connectorPrefab, transform);
-                roomConnectors.Add(newConnector);
-                newConnector.Connect(this, connectedRoom);
-            }
-        }
-
-
+        
         #region Input
 
         public void OnPointerClick(PointerEventData eventData)

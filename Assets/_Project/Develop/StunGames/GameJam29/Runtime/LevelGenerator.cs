@@ -16,6 +16,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [SerializeField] private int emptyPositionsFromExit = 0; // Минимальное количество незанятых позиций сетки от выхода (0 - выход может появиться в сторону соседней существующей комнаты)
         [SerializeField] private Transform startGridPoint; // Стартовая точка таблицы
         [SerializeField] private Room roomPrefab; // Префаб комнаты
+        [SerializeField] private RoomConnector connectorPrefab;
         private List<Room> _allRooms = new List<Room>(); // Список всех созданных комнат
         private Dictionary<Vector2Int, Room> _roomsByGridPosition = new Dictionary<Vector2Int, Room>(); // Словарь для хранения комнат по их позициям в сетке
         private Dictionary<Room, Vector2Int> _gridPositionsByRoom = new Dictionary<Room, Vector2Int>(); // Словарь для хранения позиций в сетке по занятым ими комнатам
@@ -46,10 +47,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 // Если сторона уже занята другой комнатой, то с заданной вероятностью строим к ней проход
                 foreach (var gridPosition in availableGridPositions.ToList().Where(gridPosition => _roomsByGridPosition.ContainsKey(gridPosition)))
                 {
-                    availableGridPositions.Remove(gridPosition);
-                    if (Random.Range(1, 100) < roomConnectChance)
+                    availableGridPositions.Remove(gridPosition); // Если в этой стороне уже есть комната то удаляем её из списка доступных сторон
+                    if (_roomsByGridPosition[gridPosition].ConnectedRooms.Contains(_roomsByGridPosition[currentGridPosition])) continue; // Пропускаем если комнаты уже соединены
+                    if (Random.Range(1, 100) < _gameConfig.RoomConnectChance) // Или соединяем с заданной вероятностью
                     {
-                        ConnectRooms(_roomsByGridPosition[currentGridPosition], _roomsByGridPosition[gridPosition]); 
+                        ConnectRooms(_roomsByGridPosition[currentGridPosition], _roomsByGridPosition[gridPosition]);
                     }
                 }
                 
@@ -130,10 +132,14 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             _gridPositionsByRoom[newRoom] = gridPosition; // Сохраняем позицию по занятой ею комнате
         }
         
-        private void ConnectRooms(Room room1, Room room2)
+        private void ConnectRooms(Room originRoom, Room targetRoom)
         {
-            room1.ConnectedRooms.Add(room2);
-            room2.ConnectedRooms.Add(room1);
+            RoomConnector newConnector = Instantiate(connectorPrefab, originRoom.transform);
+            originRoom.ConnectedRooms.Add(targetRoom);
+            targetRoom.ConnectedRooms.Add(originRoom);
+            originRoom.RoomConnectors.Add(newConnector);
+            targetRoom.RoomConnectors.Add(newConnector);
+            newConnector.Connect(originRoom, targetRoom);
         }
 
         private void FillRooms()

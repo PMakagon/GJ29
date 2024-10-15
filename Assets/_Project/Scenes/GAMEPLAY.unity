@@ -264,6 +264,7 @@ MonoBehaviour:
   emptyPositionsFromExit: 0
   startGridPoint: {fileID: 524116987}
   roomPrefab: {fileID: 2604995490422202281, guid: fa07772a5355631478c8c77859b3a0a6, type: 3}
+  connectorPrefab: {fileID: 249282728723625198, guid: f3d9b340d1196164296acf3c98c444f0, type: 3}
 --- !u!4 &397805301
 Transform:
   m_ObjectHideFlags: 0

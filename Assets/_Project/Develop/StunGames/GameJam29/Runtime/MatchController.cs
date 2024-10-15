@@ -77,7 +77,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public void Initialize()
         {
             Subscribe();
-            CreateLevel();
             _monster = new Monster(this,_rooms,_gameConfig);
             _monster.Initialize();
         }
