@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
 {
@@ -13,7 +15,26 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
         Visible,
         Lighted
     }
-
+    [Serializable]
+    public enum RoomType
+    {
+        SERV,
+        MTN,
+        RLY,
+        DCK,
+        CMD,
+        MED,
+        M,
+        L,
+        CR,
+        CTR,
+        AIR,
+        FUEL,
+        SRC
+    }
+    
+    
+    [Serializable]
     public enum ItemType
     {
         None,
@@ -22,7 +43,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
         Lamp,
         Terminal
     }
-    
+    [Serializable]
     public enum ExitPosition
     {
         None,
@@ -40,13 +61,14 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
         [SerializeField] private RoomConnector connectorPrefab;
         [SerializeField] private List<RoomConnector> roomConnectors = new List<RoomConnector>();
         [SerializeField] private SpriteRenderer roomSpriteRenderer;
+        [SerializeField] private SpriteRenderer itemIndicatorSpriteRenderer;
         [SerializeField] private SpriteRenderer roomHiddenSpriteRenderer;
         [SerializeField] private Transform playerPoint;
+        [SerializeField] private TextMeshPro roomNameLabel;
         
 
         [Header("Rooms Objects Renderers")] 
         [SerializeField] private SpriteRenderer monsterSpriteRenderer;
-        
         [SerializeField] private SpriteRenderer itemSpriteRenderer;
         [SerializeField] private SpriteRenderer lampSpriteRenderer;
         [SerializeField] private SpriteRenderer alarmSpriteRenderer;
@@ -111,6 +133,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
         public void Configure(ItemType item, bool isAlarmable, ExitPosition exitPosition)
         {
             SetItem(item);
+            SetRoomName();
             _isAlarmable = isAlarmable;
             _exitPosition = exitPosition;
             _hasExit = exitPosition != ExitPosition.None;
@@ -119,6 +142,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
             }
             ConnectTo(connectedRooms);
             _isReady = true;
+        }
+
+        private void SetRoomName()
+        {
+            var randomNumber = UnityEngine.Random.Range(1, 10);
+            var randomName = (RoomType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(RoomType)).Length);
+            roomNameLabel.text = randomName.ToString() + randomNumber.ToString();
         }
 
         public void Interact()
@@ -144,9 +174,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
                     break;
                 case ItemType.Health:
                     itemSpriteRenderer.sprite = healthSprite;
+                    itemIndicatorSpriteRenderer.enabled = true;
                     break;
                 case ItemType.Key:
                     itemSpriteRenderer.sprite = keySprite;
+                    itemIndicatorSpriteRenderer.enabled = true;
                     break;
                 case ItemType.Lamp:
                     lampSpriteRenderer.sprite = lightOffSprite;
@@ -216,6 +248,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
             EventHolder.RaisePlayerAction();
             playerPoint.gameObject.SetActive(true);
             roomHiddenSpriteRenderer.enabled = false;
+            itemIndicatorSpriteRenderer.enabled = false; //TODO: REMOVE
         }
 
         public void RemovePlayer()
@@ -235,6 +268,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
                 EventHolder.RaisePlayerAction();
                 if (_isAlarmable) SetAlarmOn();
                 roomSpriteRenderer.sprite = roomDefaultSprite;
+                itemIndicatorSpriteRenderer.enabled = false;
                 if (_hasExit)
                     switch (_exitPosition)
                     {
@@ -345,9 +379,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
             SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.HpPack);
             itemSpriteRenderer.enabled = false;
         }
-
-        private void OnDestroy()
-        {
-        }
+        
     }
 }

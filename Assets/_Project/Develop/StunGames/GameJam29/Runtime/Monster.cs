@@ -139,7 +139,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void HurtPlayer()
         {
             SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.EarRing);
-            Debug.Log("MONSTER ATTACK");
             _matchController.TakeDamage();
         }
     }
