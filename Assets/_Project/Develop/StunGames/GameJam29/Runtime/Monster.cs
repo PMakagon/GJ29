@@ -74,6 +74,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 MoveToRoom();
             }
             ScanRoom();
+            if (_random.Next(1, 100) < _gameConfig.MonsterStayChance) _isCooldown = true;
         }
 
         private void MoveToRoom()
