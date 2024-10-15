@@ -261,9 +261,9 @@ MonoBehaviour:
   xMultiplier: 28
   yMultiplier: 18
   roomConnectChance: 15
+  emptyPositionsFromExit: 0
   startGridPoint: {fileID: 524116987}
   roomPrefab: {fileID: 2604995490422202281, guid: fa07772a5355631478c8c77859b3a0a6, type: 3}
-  drawGizmos: 0
 --- !u!4 &397805301
 Transform:
   m_ObjectHideFlags: 0
@@ -762,7 +762,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1214406878}
   - component: {fileID: 1214406877}
-  - component: {fileID: 1214406876}
   - component: {fileID: 1214406879}
   m_Layer: 0
   m_Name: GameCamera
@@ -771,14 +770,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1214406876
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1214406875}
-  m_Enabled: 1
 --- !u!20 &1214406877
 Camera:
   m_ObjectHideFlags: 0

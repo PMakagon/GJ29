@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -296,8 +297,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                     AddKey();
                     break;
                 case ItemType.Lamp:
-                    _state = RoomState.Lighted;
-                    lampSpriteRenderer.sprite = lightOnSprite;
+                    UseLamp();
                     break;
                 case ItemType.Terminal:
                     UseTerminal();
@@ -310,8 +310,16 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             EventHolder.RaisePlayerAction();
         }
 
+        private void UseLamp()
+        {
+            _state = RoomState.Lighted;
+            lampSpriteRenderer.sprite = lightOnSprite;
+            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.Lamp);
+        }
+
         private void UseTerminal()
         {
+            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.Terminal);
             EventHolder.RaisePlayerItemInteract(ItemType.Terminal);
             EventHolder.RaisePlayerAction();
             terminalSpriteRenderer.sprite = terminalOnSprite;
@@ -323,15 +331,18 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             alarmSpriteRenderer.sprite = alarmOnSprite;
             _isAlarmOn = true;
             EventHolder.RaiseAlarmSetOn(this);
+            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.Alarm);
         }
 
         private void AddKey()
         {
+            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.Card);
             itemSpriteRenderer.enabled = false;
         }
 
         private void UseHealth()
         {
+            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.HpPack);
             itemSpriteRenderer.enabled = false;
         }
 

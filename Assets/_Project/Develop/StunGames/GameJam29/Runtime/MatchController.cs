@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
 using _Project.Develop.StunGames.GameJam29.Runtime.Gameplay;
 using _Project.Develop.StunGames.GameJam29.Runtime.Services;
 using UnityEngine;
@@ -55,10 +56,12 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (_playerHasCard)
             {
                 EventHolder.RaiseLevelExit();
+                SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.ExitOpen);
             }
             else
             {
                 Debug.Log("NO CARD");
+                SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.ExitClose);
             }
         }
 

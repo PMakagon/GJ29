@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
 using UnityEngine;
 using Random = System.Random;
+using RandomUnity = UnityEngine.Random;
+
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
@@ -81,8 +84,18 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             _currentRoom.RemoveMonster();
             _currentRoom = _nextRoom;
             _currentRoom.SetMonsterInRoom(_gameConfig.alwaysShowMonster);
+            PlayMoveSound();
         }
-        
+
+        private static void PlayMoveSound()
+        {
+            var random = RandomUnity.value;
+            if (random>0.7f)
+            {
+                SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.MetalSounds[RandomUnity.Range(0, SoundDataLibrary.Instance.MetalSounds.Count)]);
+            }
+        }
+
         private void ScanRoom()
         { 
             if (_currentRoom.IsPlayerInRoom)
@@ -95,6 +108,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private void OnAlarmTrigger(Room targetRoom)
         {
+            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.MonsterSounds[RandomUnity.Range(0, SoundDataLibrary.Instance.MonsterSounds.Count)]);
             _isAlarmModeOn = true;
             _shortestWay = _currentRoom.GetShortestPath(targetRoom);
             if (_currentRoom == _shortestWay.Peek()) _shortestWay.Dequeue();
@@ -123,6 +137,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private void HurtPlayer()
         {
+            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.EarRing);
             Debug.Log("MONSTER ATTACK");
             _matchController.TakeDamage();
         }

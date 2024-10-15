@@ -1,4 +1,5 @@
-﻿using _Project.Develop.StunGames.GameJam29.Runtime.Services;
+﻿using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
+using _Project.Develop.StunGames.GameJam29.Runtime.Services;
 using _Project.Develop.StunGames.GameJam29.Runtime.UI;
 using UnityEngine;
 using VContainer;
@@ -22,6 +23,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.MainMenu
         {
             _uiService.InitializeMainMenuScreen(this);
             _uiService.ShowUIPanel<MainMenuScreen>();
+            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.NoiseFull);
         }
         
         public async void Play()

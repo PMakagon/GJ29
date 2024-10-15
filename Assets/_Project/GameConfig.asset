@@ -23,6 +23,6 @@ MonoBehaviour:
   monsterMinSpawnDistance: 2
   debugModeOn: 0
   drawLevelGizmos: 0
-  alwaysShowMonster: 1
+  alwaysShowMonster: 0
   alwaysShowItems: 0
   godMode: 0
