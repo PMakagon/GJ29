@@ -120,8 +120,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             CreateLevel();
             _isInputActive = true;
             _currentRoom = _rooms[0];
-            PlacePlayer();
             PlaceMonster();
+            PlacePlayer();
             EventHolder.RaiseMatchStarted();
             _isInputActive = true;
         }

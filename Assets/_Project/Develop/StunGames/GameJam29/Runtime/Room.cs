@@ -212,6 +212,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (_isPlayerInRoom) return;
             _isPlayerInRoom = true;
             EventHolder.RaisePlayerEnterRoom(this); 
+            EventHolder.RaisePlayerAction();
             playerPoint.gameObject.SetActive(true);
             roomHiddenSpriteRenderer.enabled = false;
         }
@@ -221,7 +222,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (!_isPlayerInRoom) return;
             _isPlayerInRoom = false;
             EventHolder.RaisePlayerExitRoom(this);
-            EventHolder.RaisePlayerAction();
+            //EventHolder.RaisePlayerAction();
             playerPoint.gameObject.SetActive(false);
         }
 
