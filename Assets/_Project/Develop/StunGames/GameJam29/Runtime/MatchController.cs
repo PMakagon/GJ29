@@ -153,6 +153,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             {
                 _previousRoom = _currentRoom;
                 _currentRoom = room;
+                _previousRoom.VisitRoomConnector(room);
                 _previousRoom.RemovePlayer();
                 _currentPlayerView.MoveToRoom(_currentRoom);
             }

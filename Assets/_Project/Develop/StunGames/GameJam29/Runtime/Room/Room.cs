@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -215,6 +216,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             EventHolder.RaisePlayerExitRoom(this);
             //EventHolder.RaisePlayerAction();
             playerPoint.gameObject.SetActive(false);
+        }
+
+        public void VisitRoomConnector(Room targetRoom)
+        {
+            // ищем коридор участвующий в переходе и помечаем его 
+            foreach (RoomConnector roomConnector in roomConnectors.Where(roomConnector => roomConnector.TargetRoom == targetRoom || roomConnector.OriginRoom == targetRoom))
+                roomConnector.Visit();
         }
 
         private void SetRoomVisible()
