@@ -1,5 +1,6 @@
 ﻿using _Project.Develop.StunGames.GameJam29.Runtime.MainMenu;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime.UI
@@ -7,7 +8,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.UI
     public class MainMenuScreen : UIPanel
     {
         [SerializeField] private Button playBtn;
-        [SerializeField] private Toggle showMonsterBtn;
+        [SerializeField] private Toggle showMonsterTgl;
         [SerializeField] private GameConfig gameConfig;
         private MainMenuFlow _mainMenuFlow;
 
@@ -15,12 +16,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.UI
         {
             _mainMenuFlow = mainMenuFlow;
             IsInitialized = true;
+            showMonsterTgl.isOn = gameConfig.alwaysShowMonster;
         }
         
         protected override void BindButtons()
         {
             playBtn.onClick.AddListener(_mainMenuFlow.Play);
-            showMonsterBtn.onValueChanged.AddListener(ToggleMonsterShow);
+            showMonsterTgl.onValueChanged.AddListener(ToggleMonsterShow);
         }
 
         private void ToggleMonsterShow(bool isTrue)

@@ -1694,7 +1694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playBtn: {fileID: 448100964}
-  showMonsterBtn: {fileID: 1954887637}
+  showMonsterTgl: {fileID: 1954887637}
   gameConfig: {fileID: 11400000, guid: e42b641b2b3422d4e8a08476c6137cdf, type: 2}
 --- !u!1 &1042642139
 GameObject:
