@@ -66,7 +66,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             if (_isCooldown)
             {
                 _isCooldown = false;
-                Debug.Log("_isCooldown = " + _isCooldown);
             }
             else
             {
@@ -74,7 +73,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 MoveToRoom();
             }
             ScanRoom();
-            if (_random.Next(1, 100) < _gameConfig.MonsterStayChance) _isCooldown = true;
+            if (!_isAlarmModeOn && _random.Next(1, 100) < _gameConfig.MonsterStayChance) _isCooldown = true;
         }
 
         private void MoveToRoom()
