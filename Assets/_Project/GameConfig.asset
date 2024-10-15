@@ -19,6 +19,8 @@ MonoBehaviour:
   terminalsCount: 1
   hpPacksCount: 3
   hpPacksHealthPoints: 3
+  monsterStayChance: 0
+  monsterMinSpawnDistance: 2
   debugModeOn: 0
   drawLevelGizmos: 0
   alwaysShowMonster: 1

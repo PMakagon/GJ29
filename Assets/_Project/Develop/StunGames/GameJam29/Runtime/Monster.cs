@@ -45,7 +45,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             _nextRoom = startRoom;
             _currentRoom = startRoom;
             _isPlayerInRoom = false;
-            _isCooldown = false;
+            _isCooldown = true;
             _isAlarmModeOn = false;
         }
         
@@ -85,8 +85,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         }
         
         private void ScanRoom()
-        {
-            Debug.Log("Scan after monster move _currentRoom.IsPlayerInRoom = " + _currentRoom.IsPlayerInRoom);
+        { 
             if (_currentRoom.IsPlayerInRoom)
             {
                 HurtPlayer();

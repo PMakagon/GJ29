@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime
 {
@@ -84,6 +84,21 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             (distances, visited) = BreadthFirstSearch(currentRoom, targetRoom); // Производим поиск в ширину целевой комнаты 
             return visited.Contains(targetRoom) ? distances[targetRoom] : -1; // Возвращаем расстояние. Если комната недостижимо, вернуть -1
         }
+        
+        // Метод для получения списка комнат, расположенных на максимальном расстоянии от исходной
+        public static List<Room> GetRoomsAtMaxDistance(this Room currentRoom)
+        {
+            Dictionary<Room, int> distances; // Пары комната - расстяние до исходной комнаты
+            (distances, _) = BreadthFirstSearch(currentRoom); // Производим поиск в ширину
+            int maxDistance = distances.Values.Max(); // Получаем максимальное расстояние
+            List<Room> roomsAtMaxDistance = new List<Room>(); // Спиоск найденных комнат
+            
+            foreach (var pair in distances)
+                if (pair.Value >= maxDistance)
+                    roomsAtMaxDistance.Add(pair.Key);
+
+            return roomsAtMaxDistance;
+        }
 
         // Метод для получения списка всех комнат, расположенных строго на заданном расстоянии (опционально с учетом количества присоеденённых комнат)
         public static List<Room> GetRoomsAtDistance(this Room currentRoom, int distance, int connectedRoomsCount = 1)
@@ -107,7 +122,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             List<Room> roomsBeyondDistance = new List<Room>(); // Спиоск найденных комнат
 
             foreach (var pair in distances)
-                if (pair.Value > distance && pair.Key.ConnectedRooms.Count >= connectedRoomsCount)
+                if (pair.Value >= distance && pair.Key.ConnectedRooms.Count >= connectedRoomsCount)
                     roomsBeyondDistance.Add(pair.Key);
 
             return roomsBeyondDistance;
