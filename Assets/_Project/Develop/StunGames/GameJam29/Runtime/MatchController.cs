@@ -17,6 +17,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private int _currentHealth;
         private bool _playerHasCard;
         private bool _isInputActive;
+        private bool _isFirstMatch;
         private Room _previousRoom;
         private Room _currentRoom;
         private Monster _monster;
@@ -25,6 +26,12 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public int CurrentHealth => _currentHealth;
 
         public bool PlayerHasCard => _playerHasCard;
+
+        public bool IsFirstMatch
+        {
+            get => _isFirstMatch;
+            set => _isFirstMatch = value;
+        }
 
         public List<Room> Rooms => _rooms;
 
@@ -79,6 +86,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             Subscribe();
             _monster = new Monster(this,_rooms,_gameConfig);
             _monster.Initialize();
+            _isFirstMatch = true;
         }
 
 
@@ -128,7 +136,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void PlacePlayer()
         {
-            _currentHealth = _gameConfig.godMode? 999 :_gameConfig.StartHp;
+            // TODO: удалить если читаемость на тернарных операциях устраивает
+            // if (_gameConfig.godMode) _currentHealth = 999;
+            // if (_isFirstMatch) _currentHealth = _gameConfig.StartHp;
+            // else _currentHealth += _gameConfig.StartHp;
+            
+            _currentHealth = _gameConfig.godMode ? 999 : _isFirstMatch ? _gameConfig.StartHp : _currentHealth + _gameConfig.StartHp;
+            
             _currentPlayerView = _playerSpawner.SpawnPlayer();
             _currentPlayerView.SetHealth(_currentHealth);
             MovePlayer(_currentRoom);

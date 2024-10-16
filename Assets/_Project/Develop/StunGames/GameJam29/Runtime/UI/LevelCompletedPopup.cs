@@ -19,10 +19,16 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.UI
 
         protected override void BindButtons()
         {
-            restartBtn.onClick.AddListener(_gameplayFlow.RestartGame);
+            restartBtn.onClick.AddListener(_gameplayFlow.StartNextlevel);
             restartBtn.onClick.AddListener(Hide);
             exitBtn.onClick.AddListener(_gameplayFlow.GameOver);
             exitBtn.onClick.AddListener(Hide);
+        }
+
+        protected override void RemoveAllListeners()
+        {
+            restartBtn.onClick.RemoveAllListeners();
+            exitBtn.onClick.RemoveAllListeners();
         }
     }
 }

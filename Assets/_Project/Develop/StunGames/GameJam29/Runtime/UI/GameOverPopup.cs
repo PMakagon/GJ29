@@ -24,5 +24,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.UI
             exitBtn.onClick.AddListener(_gameplayFlow.GameOver);
             exitBtn.onClick.AddListener(Hide);
         }
+
+        protected override void RemoveAllListeners()
+        {
+            restartBtn.onClick.RemoveAllListeners();
+            exitBtn.onClick.RemoveAllListeners();
+        }
     }
 }

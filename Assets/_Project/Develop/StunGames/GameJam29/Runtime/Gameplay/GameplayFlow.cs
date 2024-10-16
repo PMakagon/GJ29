@@ -42,6 +42,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Gameplay
 
         public async void RestartGame()
         {
+            _matchController.IsFirstMatch = true;
+            StartGame();
+        }
+
+        public async void StartNextlevel()
+        {
+            _matchController.IsFirstMatch = false;
             StartGame();
         }
 
