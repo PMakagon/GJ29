@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f29dfaefbc04d79b235010901e16704, type: 3}
-  m_Name: noiseLamp
+  m_Name: lampOn
   m_EditorClassIdentifier: 
   clip: {fileID: 8300000, guid: ba0adf33203fe5441b72cab87ed6fc6c, type: 3}
   mixerGroup: {fileID: 6093503532705284968, guid: d60394500aa48e248aa9753029e3bb9c, type: 2}

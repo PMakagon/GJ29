@@ -338,7 +338,22 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4fe1ed6e3ddbef64cafd56c4ccfa0769, type: 2}
   - {fileID: 11400000, guid: 74e5b07b988880843bd94dbd3017296e, type: 2}
   - {fileID: 11400000, guid: cca16f3e2040a0740a7547f9d9ec0852, type: 2}
-  noiseFull: {fileID: 11400000, guid: 3797211239067c14191bcdb0610f603d, type: 2}
+  metalSoundsDistant:
+  - {fileID: 11400000, guid: 1858527a0b952f14e92ae8c75bad3d69, type: 2}
+  - {fileID: 11400000, guid: d592044ac9e33584093fbb52de6d1d25, type: 2}
+  - {fileID: 11400000, guid: 1c74b49e659448a498117c5f1f198341, type: 2}
+  - {fileID: 11400000, guid: 68874180fe9b6be4cbe4918191f9680e, type: 2}
+  - {fileID: 11400000, guid: 3d72ab70ea625c844808ebeaab2ec900, type: 2}
+  metalSoundsAll:
+  - {fileID: 11400000, guid: 1858527a0b952f14e92ae8c75bad3d69, type: 2}
+  - {fileID: 11400000, guid: d592044ac9e33584093fbb52de6d1d25, type: 2}
+  - {fileID: 11400000, guid: 1c74b49e659448a498117c5f1f198341, type: 2}
+  - {fileID: 11400000, guid: 68874180fe9b6be4cbe4918191f9680e, type: 2}
+  - {fileID: 11400000, guid: 3d72ab70ea625c844808ebeaab2ec900, type: 2}
+  - {fileID: 11400000, guid: 4fe1ed6e3ddbef64cafd56c4ccfa0769, type: 2}
+  - {fileID: 11400000, guid: 74e5b07b988880843bd94dbd3017296e, type: 2}
+  - {fileID: 11400000, guid: cca16f3e2040a0740a7547f9d9ec0852, type: 2}
+  ambience1: {fileID: 11400000, guid: 3797211239067c14191bcdb0610f603d, type: 2}
   heartBeat1: {fileID: 11400000, guid: e74edffb5b3020f45b48350d2109509d, type: 2}
   heartBeat2: {fileID: 11400000, guid: d2eb6c1ae5206724989f4c285b00a2fa, type: 2}
   heartBeat3: {fileID: 11400000, guid: c58d32f346c9adc48a1a13974c817215, type: 2}
@@ -356,8 +371,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a39fa35479c3e23439be543823c6ffe2, type: 2}
   monsterDistant1: {fileID: 11400000, guid: 2b432508f2e6151409ff1b883526821c, type: 2}
   monsterDistant2: {fileID: 11400000, guid: a39fa35479c3e23439be543823c6ffe2, type: 2}
-  monsterDistantBig: {fileID: 11400000, guid: 2f7f1856facd1c044ab226fc0f177639, type: 2}
-  monsterClose: {fileID: 0}
+  monsterClose: {fileID: 11400000, guid: 2f7f1856facd1c044ab226fc0f177639, type: 2}
   earRing: {fileID: 11400000, guid: 70d747a99af469649ada5d4d9ee580ce, type: 2}
 --- !u!81 &1887411263
 AudioListener:

@@ -23,7 +23,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.MainMenu
         {
             _uiService.InitializeMainMenuScreen(this);
             _uiService.ShowUIPanel<MainMenuScreen>();
-            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.NoiseFull);
+            SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.Ambience1);
         }
         
         public async void Play()

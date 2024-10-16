@@ -15,11 +15,12 @@ MonoBehaviour:
   startHp: 25
   roomsOnLevel: 15
   alarmsOnLevel: 2
-  lampsOnLevel: 3
+  lampsOnLevel: 4
   terminalsCount: 1
   hpPacksCount: 3
   roomConnectChance: 15
   hpPacksHealthPoints: 3
+  monsterDamage: 100
   monsterStayChance: 0
   monsterMinSpawnDistance: 2
   debugModeOn: 0

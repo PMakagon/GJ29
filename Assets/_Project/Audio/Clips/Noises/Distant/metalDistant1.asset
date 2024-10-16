@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f29dfaefbc04d79b235010901e16704, type: 3}
-  m_Name: metal2
+  m_Name: metalDistant1
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: cabd613c918c1974aa823822fd1d7dec, type: 3}
+  clip: {fileID: 8300000, guid: db3a882c1c0547f4abe28f5dc7a5f8b0, type: 3}
   mixerGroup: {fileID: 6093503532705284968, guid: d60394500aa48e248aa9753029e3bb9c, type: 2}
   loop: 0
   playOnAwake: 0
@@ -22,7 +22,7 @@ MonoBehaviour:
   bypassListenerEffects: 0
   bypassReverbZones: 0
   priority: 128
-  volume: 0.65
+  volume: 0.68
   pitch: 1
   panStereo: 0
   spatialBlend: 0

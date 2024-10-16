@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f29dfaefbc04d79b235010901e16704, type: 3}
-  m_Name: signal_noise_full
+  m_Name: metalClose2
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 9097ae54a428b9f4dae323fef2d4defb, type: 3}
+  clip: {fileID: 8300000, guid: cabd613c918c1974aa823822fd1d7dec, type: 3}
   mixerGroup: {fileID: 6093503532705284968, guid: d60394500aa48e248aa9753029e3bb9c, type: 2}
-  loop: 1
+  loop: 0
   playOnAwake: 0
   frequentSound: 0
   mute: 0
@@ -22,7 +22,7 @@ MonoBehaviour:
   bypassListenerEffects: 0
   bypassReverbZones: 0
   priority: 128
-  volume: 0.2
+  volume: 0.65
   pitch: 1
   panStereo: 0
   spatialBlend: 0

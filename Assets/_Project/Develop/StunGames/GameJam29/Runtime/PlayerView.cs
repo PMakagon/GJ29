@@ -12,7 +12,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void Awake()
         {
             Hide();
-            EventHolder.OnHealthChanged += OnHealthChanged;
+            EventHolder.onHealthChanged += HealthChanged;
         }
         
         public void SetHealth(int currentHp)
@@ -22,12 +22,12 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void OnDestroy()
         {
-            EventHolder.OnHealthChanged -= OnHealthChanged;
+            EventHolder.onHealthChanged -= HealthChanged;
         }
 
-        private void OnHealthChanged(int amount)
+        private void HealthChanged(int amount)
         {
-            healthLabel.text = amount.ToString();
+            healthLabel.text = amount<0 ? "0" : amount.ToString();
         }
 
         public void Show()

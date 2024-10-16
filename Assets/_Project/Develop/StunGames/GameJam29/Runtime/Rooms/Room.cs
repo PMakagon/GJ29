@@ -238,7 +238,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
             EventHolder.RaisePlayerEnterRoom(this); 
             EventHolder.RaisePlayerAction();
             playerPoint.gameObject.SetActive(true);
-            roomHiddenSpriteRenderer.enabled = false;
+            // roomHiddenSpriteRenderer.enabled = false;
             itemIndicatorSpriteRenderer.enabled = false; //TODO: REMOVE
         }
 

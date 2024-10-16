@@ -16,6 +16,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         [Header("ITEMS SETTINGS")] 
         [SerializeField] private int hpPacksHealthPoints =3;
         [Header("MONSTER SETTINGS")] 
+        [SerializeField] private int monsterDamage = 100;
         [SerializeField] private float monsterStayChance = 25f; // Вероятность стояния монстра на месте, от 0 до 100%
         [SerializeField] private int monsterMinSpawnDistance = 3; // Минимальное расстояние от спавна игрока до спавна монстра
         [Header("DEBUG")] 
@@ -41,6 +42,8 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public int HpPacksHealthPoints => hpPacksHealthPoints;
 
         public float RoomConnectChance => roomConnectChance;
+
+        public int MonsterDamage => monsterDamage;
 
         public float MonsterStayChance => monsterStayChance;
 

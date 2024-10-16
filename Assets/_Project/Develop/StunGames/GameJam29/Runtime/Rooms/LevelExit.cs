@@ -11,12 +11,12 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
 
         private void Awake()
         {
-           EventHolder.MatchStarted += Setup;
+           EventHolder.onMatchStarted += Setup;
         }
 
         private void Setup()
         {
-            EventHolder.MatchStarted -= Setup;
+            EventHolder.onMatchStarted -= Setup;
             room = GetComponentInParent<Room>();
             if (room.HasExit && room.ExitPosition == _exitPosition)
             {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using _Project.Develop.StunGames.GameJam29.Runtime.Utils;
 using UnityEngine;
-
+using UnityEngine.Serialization;
 
 
 namespace _Project.Develop.StunGames.GameJam29.Runtime.Audio
@@ -13,7 +13,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Audio
         [SerializeField] private SoundData errorBeep;
         [Header("NOISE")]
         [SerializeField] private List<SoundData> metalSounds = new List<SoundData>();
-        [SerializeField] private SoundData noiseFull;
+        [SerializeField] private List<SoundData> metalSoundsDistant = new List<SoundData>();
+        [SerializeField] private List<SoundData> metalSoundsAll = new List<SoundData>();
+        
+        [Header("AMBIENCE")]
+        [SerializeField] private SoundData ambience1;
 
         [Header("PLAYER")]
         [SerializeField] private SoundData heartBeat1;
@@ -35,7 +39,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Audio
         [SerializeField] private List<SoundData> monsterSounds = new List<SoundData>();
         [SerializeField] private SoundData monsterDistant1;
         [SerializeField] private SoundData monsterDistant2;
-        [SerializeField] private SoundData monsterDistantBig;
         [SerializeField] private SoundData monsterClose;
         
         [SerializeField] private SoundData earRing;
@@ -46,7 +49,11 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Audio
 
         public List<SoundData> MetalSounds => metalSounds;
 
-        public SoundData NoiseFull => noiseFull;
+        public List<SoundData> MetalSoundsDistant => metalSoundsDistant;
+
+        public List<SoundData> MetalSoundsAll => metalSoundsAll;
+
+        public SoundData Ambience1 => ambience1;
 
         public SoundData HeartBeat1 => heartBeat1;
 
@@ -77,8 +84,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Audio
         public SoundData MonsterDistant1 => monsterDistant1;
 
         public SoundData MonsterDistant2 => monsterDistant2;
-
-        public SoundData MonsterDistantBig => monsterDistantBig;
 
         public SoundData MonsterClose => monsterClose;
 

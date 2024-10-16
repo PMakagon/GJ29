@@ -51,10 +51,10 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void Subscribe()
         {
-            EventHolder.OnPlayerRoomClick += RoomInteract;
-            EventHolder.OnPlayerItemInteract += PlayerItemInteract;
-            EventHolder.OnPlayerAction += TakeDamage;
-            EventHolder.OnExitClicked += CheckExit;
+            EventHolder.onPlayerRoomClick += RoomInteract;
+            EventHolder.onPlayerItemInteract += PlayerItemInteract;
+            EventHolder.onPlayerAction += TakeDamage;
+            EventHolder.onExitClicked += CheckExit;
         }
 
         private void CheckExit(Room room)
@@ -75,10 +75,10 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void Unsubscribe()
         {
-            EventHolder.OnPlayerRoomClick -= RoomInteract;
-            EventHolder.OnPlayerItemInteract -= PlayerItemInteract;
-            EventHolder.OnPlayerAction -= TakeDamage;
-            EventHolder.OnExitClicked -= CheckExit;
+            EventHolder.onPlayerRoomClick -= RoomInteract;
+            EventHolder.onPlayerItemInteract -= PlayerItemInteract;
+            EventHolder.onPlayerAction -= TakeDamage;
+            EventHolder.onExitClicked -= CheckExit;
         }
 
         public void Initialize()
@@ -170,6 +170,13 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
                 _previousRoom.RemovePlayer();
                 _currentPlayerView.MoveToRoom(_currentRoom);
             }
+        }
+
+        public void TakeDamage(int damage)
+        {
+            if (!_gameConfig.godMode) _currentHealth-=damage;
+            EventHolder.RaiseHealthChanged(_currentHealth);
+            CheckHealth();
         }
         
         public void TakeDamage()

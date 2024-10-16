@@ -21,16 +21,16 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.UI
 
         private void Subscribe()
         {
-            EventHolder.MatchStarted += StartMatch;
-            EventHolder.MatchEnded += EndMatch;
-            EventHolder.OnLevelExit += OnLevelExit;
+            EventHolder.onMatchStarted += StartMatch;
+            EventHolder.onMatchEnded += EndMatch;
+            EventHolder.onLevelExit += OnLevelExit;
         }
 
         private void Unsubscribe()
         {
-            EventHolder.MatchStarted -= StartMatch;
-            EventHolder.MatchEnded -= EndMatch;
-            EventHolder.OnLevelExit -= OnLevelExit;
+            EventHolder.onMatchStarted -= StartMatch;
+            EventHolder.onMatchEnded -= EndMatch;
+            EventHolder.onLevelExit -= OnLevelExit;
         }
 
         private void StartMatch()

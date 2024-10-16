@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Develop.StunGames.GameJam29.Runtime.Audio;
 using _Project.Develop.StunGames.GameJam29.Runtime.Rooms;
-using UnityEngine;
 using Random = System.Random;
 using RandomUnity = UnityEngine.Random;
 
@@ -30,6 +29,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             _matchController = matchController;
             _map = map;
             _gameConfig = gameConfig;
+            _damage = _gameConfig.MonsterDamage;
         }
 
         public void Initialize()
@@ -55,14 +55,14 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         
         private void SubscribeEvents()
         {
-            EventHolder.OnAlarmSetOn += OnAlarmTrigger;
-            EventHolder.OnPlayerAction += NextStep;
+            EventHolder.onAlarmSetOn += AlarmSetOnAlarmTrigger;
+            EventHolder.onPlayerAction += NextStep;
         }
         
         private void UnSubscribeEvents()
         {
-            EventHolder.OnAlarmSetOn -= OnAlarmTrigger;
-            EventHolder.OnPlayerAction -= NextStep;
+            EventHolder.onAlarmSetOn -= AlarmSetOnAlarmTrigger;
+            EventHolder.onPlayerAction -= NextStep;
         }
 
         private void NextStep()
@@ -93,7 +93,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             var random = RandomUnity.value;
             if (random>0.8f)
             {
-                SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.MetalSounds[RandomUnity.Range(0, SoundDataLibrary.Instance.MetalSounds.Count)]);
+                SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.MetalSoundsAll[RandomUnity.Range(0, SoundDataLibrary.Instance.MetalSoundsAll.Count)]);
             }
         }
 
@@ -107,7 +107,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
             }
         }
         
-        private void OnAlarmTrigger(Room targetRoom)
+        private void AlarmSetOnAlarmTrigger(Room targetRoom)
         {
             SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.MonsterSounds[RandomUnity.Range(0, SoundDataLibrary.Instance.MonsterSounds.Count)]);
             _isAlarmModeOn = true;
@@ -139,7 +139,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         private void HurtPlayer()
         {
             SoundManager.Instance.CreateSoundBuilder().Play(SoundDataLibrary.Instance.EarRing);
-            _matchController.TakeDamage();
+            _matchController.TakeDamage(_damage);
         }
     }
 }
