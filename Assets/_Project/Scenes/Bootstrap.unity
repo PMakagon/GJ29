@@ -348,7 +348,7 @@ MonoBehaviour:
   lamp: {fileID: 11400000, guid: dc1e4e86009f1724c8a30860cb7567af, type: 2}
   terminal: {fileID: 11400000, guid: d57cf84d6fea9ce4abc770e5ab43174f, type: 2}
   hpPack: {fileID: 11400000, guid: 096ae3c7d7acd7c44846768fc55ed205, type: 2}
-  card: {fileID: 0}
+  card: {fileID: 11400000, guid: 396568aa725bcc846bd6e04fd248a815, type: 2}
   exitOpen: {fileID: 11400000, guid: fca081542e1d8ec4d84efb55f795da29, type: 2}
   exitClose: {fileID: 11400000, guid: b56a17362ec83844d8fbbb28e91aec32, type: 2}
   monsterSounds:
