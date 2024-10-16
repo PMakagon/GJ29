@@ -28,6 +28,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime.Rooms
         public void OnPointerClick(PointerEventData eventData)
         {
             if (!_isActive) return;
+            if (!room.IsPlayerInRoom) return;
             EventHolder.RaiseExitClicked(room);
         }
     }

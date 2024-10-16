@@ -18,6 +18,7 @@ MonoBehaviour:
   lampsOnLevel: 3
   terminalsCount: 1
   hpPacksCount: 3
+  roomConnectChance: 15
   hpPacksHealthPoints: 3
   monsterStayChance: 0
   monsterMinSpawnDistance: 2

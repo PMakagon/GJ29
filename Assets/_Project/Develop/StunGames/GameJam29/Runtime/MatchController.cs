@@ -52,6 +52,7 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
 
         private void CheckExit(Room room)
         {
+            if (!_isInputActive) return;
             if (_playerHasCard)
             {
                 EventHolder.RaiseLevelExit();
@@ -118,7 +119,6 @@ namespace _Project.Develop.StunGames.GameJam29.Runtime
         public void StartMatch()
         {
             CreateLevel();
-            _isInputActive = true;
             _currentRoom = _rooms[0];
             PlaceMonster();
             PlacePlayer();
